@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feelio - My Journal</title>
+    <!-- Mengambil font Poppins dan Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <link rel="stylesheet" href="../css/journal.css">
+</head>
+<body>
+
+    <div id="nav-placeholder"></div>
+    <div class="app-wrapper">
+        <main class="container">
+            
+            <div class="my-garden-floating" id="openGardenBtn">
+                <span class="badge-count" id="floatingBadgeCount">2</span>
+                <img src="../assets/background/Garden/level_1.png" alt="My Garden" class="garden-pot-img" id="floatingGardenImg">
+                <p>My Garden</p>
+            </div>
+
+            <div class="header-section">
+                <h1><b>My Journal ✨</b></h1>
+                <p>A safe place for your thoughts and reflections. 💜</p>
+            </div>
+
+            <!-- NEW JOURNAL -->
+            <div class="dashboard-grid">
+                <div class="left-column">
+                    <div class="card">
+                        <div class="card-header-action">
+                            <div class="card-title"><i class="fa-solid fa-pen-nib"></i> New Journal</div>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="journalTitle" class="input-control" placeholder="Give your journal a title...">
+                        </div>
+                        <div class="input-group">
+                            <textarea id="journalBody" class="input-control" placeholder="How was your day today?"></textarea>
+                            <div class="character-count"><span id="charCount">0</span> / 2000</div>
+                        </div>
+                        <div class="journal-actions">
+                            <button class="btn-outline" id="addPhotoBtn"><i class="fa-regular fa-image"></i> Add Photo</button>
+                            <button class="btn-outline" id="chooseCatBtn"><i class="fa-solid fa-tags"></i> Choose Category</button>
+                        </div>
+                        <button class="btn-primary" id="saveJournalBtn"><i class="fa-regular fa-bookmark"></i> Save Journal</button>
+                    </div>
+
+                    <!-- RECENT JOURNAL -->
+                    <div class="section-title-row">
+                        <i class="fa-solid fa-book-open"></i>
+                        <div>
+                            <h3>Recent Journals</h3>
+                            <p>Your recent thoughts and memories.</p>
+                        </div>
+                    </div>
+
+                    <div class="recent-list" id="recentListContainer">
+                        <div class="recent-item" data-id="1">
+                            <div class="recent-info">
+                                <div class="mood-indicator-img"><img src="../assets/background/Mood/Happy_mood.png" alt="Happy"></div>
+                                <div class="recent-text">
+                                    <h4>A Good Day</h4>
+                                    <p>Today was a good day. I felt more productive and calm...</p>
+                                    <span class="date-sub">May 20, 2026 • 10:30 PM</span>
+                                </div>
+                            </div>
+                            <div class="recent-meta">
+                                <i class="fa-regular fa-bookmark"></i>
+                                <i class="fa-solid fa-ellipsis-vertical action-trigger" onclick="toggleMenuPopup(event)"></i>
+                            </div>
+                        </div>
+
+                        <div class="recent-item" data-id="2">
+                            <div class="recent-info">
+                                <div class="mood-indicator-img"><img src="../assets/background/Mood/Stress.png" alt="Stressed"></div>
+                                <div class="recent-text">
+                                    <h4>Overthinking Again</h4>
+                                    <p>My mind was so busy today, I just need to breathe and let it go...</p>
+                                    <span class="date-sub">May 18, 2026 • 11:45 PM</span>
+                                </div>
+                            </div>
+                            <div class="recent-meta">
+                                <i class="fa-regular fa-bookmark"></i>
+                                <i class="fa-solid fa-ellipsis-vertical action-trigger" onclick="toggleMenuPopup(event)"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="center-btn-row">
+                        <button class="btn-view-all">View All Journals <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- HOW ARE YOU FEELING -->
+                <div class="right-column">
+                    <div class="card">
+                        <div class="card-title">How are you feeling?</div>
+                        <p class="card-sub">Choose the mood that best fits you.</p>
+                        
+                        <div class="mood-options">
+                            <button class="mood-btn active" data-mood="happy">
+                                <div class="icon-wrap"><img src="../assets/background/Mood/Happy_mood.png" alt="Happy"></div>
+                                <span>Happy</span>
+                            </button>
+                            <button class="mood-btn" data-mood="neutral">
+                                <div class="icon-wrap"><img src="../assets/background/Mood/Natural.png" alt="Neutral"></div>
+                                <span>Neutral</span>
+                            </button>
+                            <button class="mood-btn" data-mood="sad">
+                                <div class="icon-wrap"><img src="../assets/background/Mood/Sad.png" alt="Sad"></div>
+                                <span>Sad</span>
+                            </button>
+                            <button class="mood-btn" data-mood="stressed">
+                                <div class="icon-wrap"><img src="../assets/background/Mood/Stress.png" alt="Stressed"></div>
+                                <span>Stressed</span>
+                            </button>
+                            <button class="mood-btn" data-mood="tired">
+                                <div class="icon-wrap"><img src="../assets/background/Mood/Tired.png" alt="Tired"></div>
+                                <span>Tired</span>
+                            </button>
+                            <button class="mood-btn" data-mood="angry">
+                                <div class="icon-wrap"><img src="../assets/background/Mood/Angry.png" alt="Angry"></div>
+                                <span>Angry</span>
+                            </button>
+                             <button class="mood-btn" data-mood="disappointed">
+                                <div class="icon-wrap"><img src="../assets/background/Mood/Disappointed.png" alt="Disappointed"></div>
+                                <span>Disappointed</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- EMOTION SKY -->
+                    <div class="card">
+                        <div class="card-title">Emotion Sky</div>
+                        <p class="card-sub">The sky changes with your mood.</p>
+                        
+                        <div class="sky-display-container">
+                            <img src="../assets/background/Sky/happy.jpeg" id="emotionSkyImg" alt="Emotion Sky" class="sky-bg-img">
+                            <div class="sky-overlay-text" id="skyStatusText">Happy Day ☀️</div>
+                        </div>
+                    </div>
+
+                    <!-- LETTER FUTURE SELF -->
+                    <div class="card letter-card">
+                        <div class="letter-flex">
+                            <div class="letter-left">
+                                <div class="card-title">Letter to Future Self</div>
+                                <p class="card-sub">Write a letter to your future self.</p>
+                            </div>
+                            <div class="letter-img-decor">
+                                <img src="../assets/background/latter_future/amplop.png" alt="Letter">
+                            </div>
+                        </div>
+                        <div class="letter-action-row">
+                            <span class="info-letter-text">Open it on a special day.</span>
+                            <button class="btn-primary-sm" id="writeLetterBtn">Write a Letter</button>
+                        </div>
+                    </div>
+
+                    <!-- FUTURE LETTER STEP 1 -->
+                    <div class="modal-overlay" id="letterModalStep1">
+                        <div class="modal-box">
+                            <div class="modal-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h3>Write to Future Self ✉️</h3>
+                                <button class="btn-close-x" onclick="closeModal('letterModalStep1')" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--title-dark-purple);">&times;</button>
+                            </div>
+                            <textarea class="input-control modal-textarea" id="futureLetterText" placeholder="Dear Future Me, today I want to tell you that..." style="height: 180px;"></textarea>
+                            <div class="modal-footer">
+                                <button class="btn-primary" id="nextLetterStepBtn">Next (Set Date) <i class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FUTURE LETTER STEP 2 -->
+                    <div class="modal-overlay" id="letterModalStep2">
+                        <div class="modal-box">
+                            <div class="modal-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h3>When should this open? 📅</h3>
+                                <button class="btn-close-x" onclick="closeModal('letterModalStep2')" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--title-dark-purple);">&times;</button>
+                            </div>
+                            <p class="card-sub" style="margin-bottom: 15px;">Pick a secure date in the future to seal your memories.</p>
+                            <div class="date-picker-group" style="margin: 20px 0;">
+                                <input type="date" id="unlockDate" class="input-control">
+                            </div>
+                            <div class="modal-footer" style="display: flex; gap: 10px;">
+                                <button class="btn-outline" onclick="backToStep1()" style="width: auto; padding: 10px 20px;">Back</button>
+                                <button class="btn-primary" id="finalizeLetterBtn">Lock Letter Securely 🔒</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+     <!-- POPUP PHOTO DAN CATAGORY -->
+    <!-- <div id="photoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('photoModal')">&times;</span>
+            <h3>Add a Photo</h3>
+            <input type="file" id="fileInput" accept="image/*">
+            <button class="btn-primary" style="margin-top:10px;">Upload</button>
+        </div>
+    </div>
+
+    <div id="catModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('catModal')">&times;</span>
+            <h3>Choose Category</h3>
+            <div class="category-list">
+                <button class="btn-outline">Mental Health</button>
+                <button class="btn-outline">Personal</button>
+                <button class="btn-outline">Work</button>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- GENERAL MODAL (Untuk Fitur Add Photo, Choose Category, Add Mood, View/Delet) -->
+    <div class="modal-overlay" id="generalModal">
+        <div class="modal-box">
+            <h3 id="generalModalTitle">Title</h3>
+            <div class="modal-body" id="generalModalContent"></div>
+            <div class="modal-footer">
+                <button class="btn-close-modal" onclick="closeModal('generalModal')">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GARDEN MODAL -->
+    <div class="modal-overlay" id="gardenModal">
+        <div class="modal-box garden-growth-box">
+            <h3>Lavender Garden Growth 🪴</h3>
+            <p>Your garden grows every time you log a journal!</p>
+            <div class="garden-visual" style="text-align: center; margin: 20px 0;">
+                <img src="../assets/background/Garden/level_1.png" id="lavenderGrowthImg" alt="Lavender" style="width: 120px; transition: 0.5s;">
+            </div>
+            <div class="growth-status" style="text-align: center; font-weight: 600;">Total Journals: <span id="journalCountBadge">2</span></div>
+            <div class="modal-footer">
+                <button class="btn-close-modal" onclick="closeModal('gardenModal')">Beautiful!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTEXT MENU POPUP (Tiga Titik) -->
+    <div class="context-popup" id="actionMenuPopup">
+        <div class="context-item" id="ctxView"><i class="fa-regular fa-eye"></i> View Journal</div>
+        <div class="context-item" id="ctxEdit"><i class="fa-regular fa-pen-to-square"></i> Edit Journal</div>
+        <div class="context-item context-delete" id="ctxDelete"><i class="fa-regular fa-trash-can"></i> Delete Journal</div>
+    </div>
+    <div id="footer-placeholder"></div>
+
+
+<script src="https://unpkg.com/feather-icons"></script>
+<script src="../js/journal.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+
+        // Load Navbar
+        const navResponse = await fetch("../components/navbar.html");
+
+        if (!navResponse.ok) {
+            throw new Error("Navbar tidak ditemukan");
+        }
+
+        const navHtml = await navResponse.text();
+
+        document.getElementById("nav-placeholder").innerHTML = navHtml;
+
+
+        // Load Footer
+        const footerResponse = await fetch("../components/footer.html");
+
+        if (!footerResponse.ok) {
+            throw new Error("Footer tidak ditemukan");
+        }
+
+        const footerHtml = await footerResponse.text();
+
+        document.getElementById("footer-placeholder").innerHTML = footerHtml;
+
+
+        // Render Feather Icons
+        if (window.feather) {
+            feather.replace();
+        }
+
+
+        // Load navbar.js
+        const script = document.createElement("script");
+        script.src = "../js/navbar.js";
+        document.body.appendChild(script);
+
+    } catch (error) {
+
+        console.error("Gagal memuat komponen:", error);
+
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feelio - Navbar</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/navbar.css">
+    
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <img src="../assets/images/logo-feelio.png" alt="Feelio Icon" class="logo-img">
+      <span>Feelio</span>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="../pages/home.html">Home</a></li>
+      <li><a href="../pages/daily-light.html">Daily Light</a></li>
+      <li><a href="../pages/rituals.html">Rituals</a></li>
+      <li><a href="../pages/caremap.html">Care Map</a></li>
+      <li><a href="../pages/journal.html">Insight</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <div class="notification-container">
+        <div class="notification-icon" id="notifTrigger">
+          <i data-feather="bell"></i>
+          <span class="badge"></span> 
+        </div>
+        
+        <div class="notif-dropdown" id="notifDropdown">
+          <div class="notif-header">
+            <h3>Notifications</h3>
+            <button class="mark-read">Mark all as read</button>
+          </div>
+          <div class="notif-content">
+            <div class="notif-item unread">
+              <div class="notif-dot"></div>
+              <p>Welcome to Feelio! Start your journey today ✨</p>
+              <span>2 mins ago</span>
+            </div>
+            <div class="notif-item">
+              <p>Don't forget to check your daily mood!</p>
+              <span>1 hour ago</span>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-dropdown">
+        <div class="profile-bubble" id="profileTrigger">
+          <img src="../assets/images/mascot-calm.png" alt="profile" class="mascot-img calm">
+          <img src="../assets/images/mascot-happy.png" alt="profile" class="mascot-img happy">
+        </div>
+      
+      <div class="dropdown-menu" id="dropdownMenu">
+        <div class="dropdown-header">Selamat Datang!</div>
+        <hr>
+        <a href="#" class="dropdown-item">Login</a>
+        <a href="#" class="dropdown-item">Register</a>
+      </div>
+    </div>
+
+    <div class="hamburger">
+      <i data-feather="menu"></i>
+    </div>
+  </div>
+</nav>
+
+<div class="auth-modal-overlay" id="authModal">
+  <div class="modal-content">
+    <button class="close-modal" id="closeModal">&times;</button>
+    <div id="modalFormContainer"></div>
+  </div>
+</div>
+
+<script src="../js/navbar.js"></script>
+
+<script>
+  feather.replace();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feelio - Care Map</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <link rel="stylesheet" href="../css/navbar.css">
+  <link rel="stylesheet" href="../css/footer.css">
+  <link rel="stylesheet" href="../css/caremap.css" />
+</head>
+
+<body>
+  <div id="nav-placeholder"></div>
+
+  <div id="loading-screen">
+    <div class="loader-content">
+        <img src="../assets/images/mascot_map.png" alt="Loading Mascot" class="loading-mascot">
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+        <p>Finding peaceful spots around you...</p>
+    </div>
+</div>
+
+  <div class="page-shell">
+    <main>
+      <section class="hero">
+        <div class="hero-text">
+          <h1>Care <span>Map</span></h1>
+          <p>Find nearby places and activities that support your well-being.</p>
+          <small>
+            You don't have to go through it alone. Explore safe spaces and supportive resources around you.
+          </small>
+        </div>
+
+        <div class="hero-visual">
+          <img class="map-illustration" src="../assets/images/mascot_map.png" alt="Care map illustration" />
+        </div>
+      </section>
+
+      <section class="search-section">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search places, activities, or support..."
+          />
+        </div>
+      </section>
+
+      <section class="category-section">
+        <div class="section-title">
+          <h2>Explore by Category</h2>
+        </div>
+
+        <div class="category-grid">
+          <button class="category-card active" data-category="all">
+            <img src="../assets/images/activities.png" alt="">
+            <h3>All Places</h3>
+            <p>Explore every support option.</p>
+            <span>View</span>
+          </button>
+
+          <button class="category-card" data-category="counseling">
+            <img src="../assets/images/message.png" alt="">
+            <h3>Therapy & Counseling</h3>
+            <p>Professional help from trusted experts.</p>
+            <span>View</span>
+          </button>
+
+          <button class="category-card" data-category="community">
+            <img src="../assets/images/group.png" alt="" />
+            <h3>Support Groups</h3>
+            <p>Connect with others who understand.</p>
+            <span>View</span>
+          </button>
+
+          <button class="category-card" data-category="wellness">
+            <img src="../assets/images/flower.png" alt="" />
+            <h3>Wellness Spaces</h3>
+            <p>Find calm places near you.</p>
+            <span>View</span>
+          </button>
+
+          <button class="category-card" data-category="emergency">
+            <img src="../assets/images/telephone.png" alt="" />
+            <h3>Hotlines & Helplines</h3>
+            <p>Talk to someone, anytime.</p>
+            <span>View</span>
+          </button>
+
+          <button class="category-card" data-category="selfcare">
+            <img src="../assets/images/activities.png" alt="" />
+            <h3>Self-Care Activities</h3>
+            <p>Activities to help you feel better.</p>
+            <span>View</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="care-layout">
+        <div class="places-area">
+          <div class="section-title">
+            <h2>Recommended Near You</h2>
+          </div>
+          <div class="places-list" id="placesList"></div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="alone-card">
+            <div>
+              <h3>You are not alone</h3>
+              <p>It's okay to ask for help. Small steps can lead to big changes.</p>
+            </div>
+            <img src="../assets/images/mascot_love.png" alt="" />
+          </div>
+
+          <div class="quick-card">
+             <h3>Quick Access</h3>
+             <button data-action="tel:112">
+               <img src="../assets/images/telephone.png" alt="" />
+               <span>
+                 <strong>Emergency Hotline</strong>
+                 <small>24/7 Support</small>
+               </span>
+               <i class="fa-solid fa-chevron-right"></i>
+             </button>
+             <button data-action="https://www.google.com/search?q=mental+health+support+Indonesia">
+               <img src="../assets/images/message.png" alt="" />
+               <span>
+                 <strong>Mental Health Support</strong>
+                 <small>Find support resources</small>
+               </span>
+               <i class="fa-solid fa-chevron-right"></i>
+             </button>
+             <button data-action="https://www.google.com/maps/search/?api=1&query=therapist+near+Denpasar+Bali">
+               <img src="../assets/images/group.png" alt="" />
+               <span>
+                 <strong>Find a Therapist</strong>
+                 <small>Trusted professionals</small>
+               </span>
+               <i class="fa-solid fa-chevron-right"></i>
+             </button>
+          </div>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="../js/caremap.js"></script>
+
+  <script>
+    async function initPage() {
+      try {
+        // 1. Load Navbar
+        const navRes = await fetch('../components/navbar.html');
+        if (navRes.ok) {
+          const navData = await navRes.text();
+          document.getElementById('nav-placeholder').innerHTML = navData;
+          
+          // Inject Navbar Script agar menu (toggle/hamburger) jalan
+          const navScript = document.createElement('script');
+          navScript.src = '../js/navbar.js';
+          document.body.appendChild(navScript);
+        }
+
+        // 2. Load Footer
+        const footRes = await fetch('../components/footer.html');
+        if (footRes.ok) {
+          const footData = await footRes.text();
+          document.getElementById('footer-placeholder').innerHTML = footData;
+        }
+
+        // 3. Render Feather Icons
+        if (window.feather) {
+          feather.replace();
+        }
+
+      } catch (err) {
+        console.error("Gagal memuat komponen navigasi:", err);
+      }
+    }
+
+    // Jalankan inisialisasi
+    initPage();
+
+window.addEventListener('load', () => {
+    const loader = document.getElementById('loading-screen');
+    
+    if (loader) {
+        setTimeout(() => {
+            loader.classList.add('fade-out');
+
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 800); 
+            
+        }, 1000); 
+    }
+});
+
+  </script>
+</body>
+</html>

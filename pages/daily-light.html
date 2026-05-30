@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Light - Feelio</title>
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/daily-light.css">
+    <link rel="stylesheet" href="../css/footer.css">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="nav-placeholder"></div>
+
+<div id="loading-screen">
+    <div class="loader-content">
+        <img src="../assets/images/fortune-cookie-jar.png" alt="Loading Mascot" class="loading-mascot">
+        <div class="loading-bar-container">
+            <div class="loading-bar"></div>
+        </div>
+        <p>Gathering a special message just for you...</p>
+    </div>
+</div>
+
+    <main class="daily-wrapper">
+        <section class="daily-card">
+            <div class="daily-content">
+                <span class="badge">Daily Light</span>
+                <h1>Open a cookie, <br> <span class="highlight">get a gentle message.</span></h1>
+                <p class="sub-text">A small reminder for your day, just for you ✨</p>
+
+                <div class="cookies-grid">
+                    <div class="cookie-item" onclick="openPopup('Believe in yourself and magic will happen.')">
+                        <div class="cookie-circle"></div> 
+                        <img src="../assets/images/fortune-cookie.png" alt="Cookie">
+                    </div>
+
+                    <div class="cookie-item" onclick="openPopup('Your potential is endless.')">
+                        <div class="cookie-circle"></div> 
+                        <img src="../assets/images/fortune-cookie.png" alt="Cookie">
+                    </div>
+
+                    <div class="cookie-item cookie-mirror" onclick="openPopup('A beautiful day starts with a positive mindset.')">
+                        <div class="cookie-circle"></div> 
+                        <img src="../assets/images/fortune-cookie.png" alt="Cookie">
+                    </div>
+                </div>
+
+                <p class="choose-instruction">Choose a cookie</p>
+
+                <div id="result-section" class="result-section hidden">
+                    <div class="mascot-quote-box">
+                        <div class="mascot-wrapper">
+                            <img src="../assets/images/mascot-purple.png" alt="Mascot">
+                        </div>
+                        <div class="quote-content">
+                            <h2 id="final-quote-text">"Your gentle message appears here"</h2>
+                            <p>— Your Daily Message</p>
+                        </div>
+                    </div>
+
+                    <div class="quote-actions">
+                        <button type="button" class="btn-outline">
+                            <i data-feather="copy"></i> Save as Zen Card
+                        </button>
+                        <button type="button" class="btn-outline">
+                            <i data-feather="share-2"></i> Share
+                        </button>
+                    </div>
+                </div>
+
+                <div class="zen-card-promo">
+                    <div class="promo-text">
+                        <h3>Create your own Zen Card</h3>
+                        <p>Turn this quote into a beautiful wallpaper and keep the good vibes with you.</p>
+                        <button class="btn-primary-small">Create now</button>
+                    </div>
+                    <div class="promo-image-container">
+                        <img src="../assets/images/zen-cards-combined.PNG" alt="Zen Cards">
+                    </div>
+                </div>
+
+                <section class="extra-info-container">
+                    <div class="info-card streak-card">
+                        <div class="info-content">
+                            <h3>Your Daily Streak</h3>
+                            <p>You've opened 7 days in a row!<br>Keep it glowing.</p>
+                            <div class="streak-days">
+                                <div class="day active"><span>M</span></div>
+                                <div class="day active"><span>T</span></div>
+                                <div class="day active"><span>W</span></div>
+                                <div class="day active"><span>T</span></div>
+                                <div class="day active"><span>F</span></div>
+                                <div class="day active"><span>S</span></div>
+                                <div class="day current"><span>S</span></div>
+                            </div>
+                        </div>
+                        <div class="info-visual">
+                            <img src="../assets/images/mascot-streak.png" alt="Mascot Streak">
+                        </div>
+                    </div>
+
+                    <div class="info-card tomorrow-card">
+                        <div class="info-content">
+                            <h3>See you tomorrow 💜</h3>
+                            <p>A new cookie,<br>a new message,<br>a new you.</p>
+                        </div>
+                        <div class="info-visual">
+                            <img src="../assets/images/fortune-cookie-jar.png" alt="See you tomorrow">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="past-messages">
+                    <div class="section-header">
+                        <h2>Your Past Messages</h2>
+                        <a href="#" class="view-all">View all</a>
+                    </div>
+                    
+                    <div class="slider-wrapper">
+                        <button class="nav-btn prev-btn" id="prevBtn">❮</button>
+                        
+                        <div class="messages-container" id="messagesList">
+                            <div class="message-card" style="background-image: url('../assets/images/quote-mascot-blue.png');">
+                                <span class="date">May 20, 2024</span>
+                                <p>"You're allowed to take up space."</p>
+                            </div>
+                            <div class="message-card" style="background-image: url('../assets/images/quote-mountain.png');">
+                                <span class="date">May 19, 2024</span>
+                                <p>"Small steps still move you forward."</p>
+                            </div>
+                            <div class="message-card" style="background-image: url('../assets/images/quote-heart.png');">
+                                <span class="date">May 18, 2024</span>
+                                <p>"You're doing better than you think."</p>
+                            </div>
+                            <div class="message-card" style="background-image: url('../assets/images/quote-moon.png');">
+                                <span class="date">May 17, 2024</span>
+                                <p>"Believe in your potential."</p>
+                            </div>
+                            <div class="message-card" style="background-image: url('../assets/images/quote-flower.png');">
+                                <span class="date">May 16, 2024</span>
+                                <p>"Peace begins with a smile."</p>
+                            </div>
+                            <div class="message-card" style="background-image: url('../assets/images/quote-fortune.png');">
+                                <span class="date">May 15, 2024</span>
+                                <p>"Your mind is a powerful thing."</p>
+                            </div>
+                        </div>
+
+                        <button class="nav-btn next-btn" id="nextBtn">❯</button>
+                    </div>
+                </section>
+
+                <div class="footer-banner-container">
+                    <div class="footer-banner-content">
+                        <div class="footer-banner-text">
+                            <h2>One cookie a day, <br> a little light your way.</h2>
+                            <p>Come back tomorrow for <br> another message just for you ✨</p>
+                        </div>
+                        <div class="footer-banner-visual">
+                            <img src="../assets/images/mascot-hug-cookie.png" alt="Mascot Hugging Cookie">
+                        </div>
+                    </div>
+                </div>
+
+            </div> 
+        </section> 
+    </main>
+
+    <div id="quote-popup" class="popup-overlay hidden">
+        <div class="popup-content">
+            <div class="paper-visual">
+                <img src="../assets/images/paper-bg.png" alt="Fortune Cookie Paper" class="paper-img">
+                <div class="quote-text-container">
+                    <p id="popup-text">"Your message here"</p>
+                </div>
+            </div>
+
+            <div class="popup-actions">
+                <button class="btn-save-quote" onclick="saveQuote()">
+                    <i data-feather="heart" style="margin-right: 8px;"></i> Save Quote
+                </button>
+                <button class="btn-maybe" onclick="closePopup()">Maybe later</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="../js/daily-light.js"></script>
+    <script>
+        async function initPage() {
+            try {
+                const response = await fetch('../components/navbar.html');
+                const data = await response.text();
+                document.getElementById('nav-placeholder').innerHTML = data;
+
+                const footRes = await fetch('../components/footer.html');
+                const footData = await footRes.text();
+                document.getElementById('footer-placeholder').innerHTML = footData;
+
+                if (window.feather) { feather.replace(); }
+
+                const navScript = document.createElement('script');
+                navScript.src = '../js/navbar.js';
+                document.body.appendChild(navScript);
+            } catch (err) { console.error(err); }
+        }
+        document.addEventListener('DOMContentLoaded', initPage);
+
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loading-screen');
+            
+            if (loader) {
+                setTimeout(() => {
+                    loader.classList.add('fade-out');
+
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 800); 
+                    
+                }, 1000); 
+            }
+        });
+
+    </script>
+</body>
+</html>
