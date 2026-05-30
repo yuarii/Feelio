@@ -14,6 +14,30 @@ const authModal = document.getElementById("authModal");
 const closeModalBtn = document.getElementById("closeModal");
 const modalFormContainer = document.getElementById("modalFormContainer");
 
+let tempRegisterData = null;
+
+function updateProfileDropdown() {
+    if (!dropdownMenu) return;
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    if (currentUser) {
+        dropdownMenu.innerHTML = `
+            <div class="dropdown-header" style="padding: 15px; border-bottom: 1px solid #eee;">
+                <p style="font-weight: 600; color: #8B6CFF; margin: 0;">Hi, ${currentUser.name} ✨</p>
+            </div>
+            <a href="#" class="dropdown-item">My Profile</a>
+            <a href="#" class="dropdown-item">Settings</a>
+            <hr style="margin: 5px 0; border: none; border-top: 1px solid #eee;">
+            <a href="#" class="dropdown-item logout-action" style="color: #ff6b6b !important;">Logout</a>
+        `;
+    } else {
+        dropdownMenu.innerHTML = `
+            <a href="#" class="dropdown-item login-trigger">Login</a>
+            <a href="#" class="dropdown-item register-trigger">Register</a>
+        `;
+    }
+}
+
 function showCustomAlert(message, isSuccess = true) {
     const alertBox = document.createElement('div');
     alertBox.style.cssText = `
@@ -52,10 +76,12 @@ function showCustomAlert(message, isSuccess = true) {
 }
 
 window.addEventListener("scroll", () => {
-    if (window.scrollY > 20) {
-        navbar.classList.add("scrolled");
-    } else {
-        navbar.classList.remove("scrolled");
+    if (navbar) {
+        if (window.scrollY > 20) {
+            navbar.classList.add("scrolled");
+        } else {
+            navbar.classList.remove("scrolled");
+        }
     }
 });
 
@@ -100,6 +126,7 @@ if (markReadBtn && notifContent) {
 if (profileTrigger && dropdownMenu) {
     profileTrigger.addEventListener("click", (e) => {
         e.stopPropagation();
+        updateProfileDropdown();
         if (notifDropdown) notifDropdown.classList.remove("show");
         const isOpen = dropdownMenu.classList.toggle("show");
         if (isOpen) {
@@ -120,7 +147,6 @@ function handleAuthAction(type) {
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
-        
         let users = JSON.parse(localStorage.getItem('feelio_users')) || [];
 
         if (type === 'register') {
@@ -136,14 +162,15 @@ function handleAuthAction(type) {
 
             users.push({ name, email, password });
             localStorage.setItem('feelio_users', JSON.stringify(users));
+            
+            tempRegisterData = { email, password };
+            
             showCustomAlert("Registration Successful! ✨");
-            setTimeout(() => openAuthModal('login'), 1500);
+            setTimeout(() => openAuthModal('login'), 1000);
         } 
-        
         else if (type === 'login') {
             const email = form.querySelector('.auth-email').value;
             const password = form.querySelector('.auth-password').value;
-
             const user = users.find(u => u.email === email);
 
             if (!user) {
@@ -154,6 +181,8 @@ function handleAuthAction(type) {
                 showCustomAlert(`Welcome back, ${user.name}! ✨`);
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 authModal.classList.remove("show");
+                tempRegisterData = null; 
+                updateProfileDropdown();
                 setTimeout(() => window.location.reload(), 1500);
             }
         }
@@ -165,22 +194,25 @@ function openAuthModal(type) {
 
     let content = "";
     if (type === 'login') {
+        const fillEmail = tempRegisterData ? tempRegisterData.email : "";
+        const fillPass = tempRegisterData ? tempRegisterData.password : "";
+        
         content = `
-            <form id="loginForm">
+            <form id="loginForm" autocomplete="off">
                 <h2>Welcome Back!</h2>
-                <input type="email" class="auth-email" placeholder="Email" required>
-                <input type="password" class="auth-password" placeholder="Password" required>
+                <input type="email" class="auth-email" placeholder="Email" value="${fillEmail}" required autocomplete="new-password">
+                <input type="password" class="auth-password" placeholder="Password" value="${fillPass}" required autocomplete="new-password">
                 <button type="submit" class="auth-btn">Sign In</button>
                 <p style="margin-top:15px; font-size:12px; color:#666">Don't have an account? <a href="#" onclick="openAuthModal('register')" style="color:#8B6CFF">Register here</a></p>
             </form>
         `;
     } else if (type === 'register') {
         content = `
-            <form id="registerForm">
+            <form id="registerForm" autocomplete="off">
                 <h2>Create Account</h2>
-                <input type="text" class="auth-name" placeholder="Full Name" required>
-                <input type="email" class="auth-email" placeholder="Email" required>
-                <input type="password" class="auth-password" placeholder="Password" required>
+                <input type="text" class="auth-name" placeholder="Full Name" required autocomplete="new-password">
+                <input type="email" class="auth-email" placeholder="Email" required autocomplete="new-password">
+                <input type="password" class="auth-password" placeholder="Password" required autocomplete="new-password">
                 <button type="submit" class="auth-btn">Register Now</button>
                 <p style="margin-top:15px; font-size:12px; color:#666">Already have an account? <a href="#" onclick="openAuthModal('login')" style="color:#8B6CFF">Login here</a></p>
             </form>
@@ -189,7 +221,6 @@ function openAuthModal(type) {
 
     modalFormContainer.innerHTML = content;
     authModal.classList.add("show");
-    
     handleAuthAction(type);
 
     if (dropdownMenu) dropdownMenu.classList.remove("show");
@@ -200,16 +231,30 @@ function openAuthModal(type) {
 }
 
 document.addEventListener("click", (e) => {
-    const item = e.target.closest(".dropdown-item");
-    if (!item) return;
-
-    const text = item.textContent.trim().toLowerCase();
-    if (text === "login") {
+    if (e.target.closest(".login-trigger") || (e.target.textContent.trim().toLowerCase() === "login" && e.target.closest(".dropdown-item"))) {
         e.preventDefault();
         openAuthModal('login');
-    } else if (text === "register") {
+    } 
+    else if (e.target.closest(".register-trigger") || (e.target.textContent.trim().toLowerCase() === "register" && e.target.closest(".dropdown-item"))) {
         e.preventDefault();
         openAuthModal('register');
+    }
+    else if (e.target.closest(".logout-action")) {
+        e.preventDefault();
+        
+        localStorage.removeItem('currentUser');
+        tempRegisterData = null;
+
+        if (modalFormContainer) {
+            modalFormContainer.innerHTML = '';
+        }
+
+        showCustomAlert("Successfully logged out! See you soon ✨");
+        updateProfileDropdown();
+        
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
     }
 });
 
@@ -232,7 +277,7 @@ window.addEventListener("click", (e) => {
     if (dropdownMenu && dropdownMenu.classList.contains("show")) {
         if (!profileTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
             dropdownMenu.classList.remove("show");
-            setTimeout(() => { profileTrigger.classList.remove("active"); }, 150);
+            setTimeout(() => { if(profileTrigger) profileTrigger.classList.remove("active"); }, 150);
         }
     }
     if (notifDropdown && notifDropdown.classList.contains("show")) {
@@ -247,4 +292,4 @@ window.addEventListener("click", (e) => {
     }
 });
 
-console.log("Feelio Auth System Ready: Custom Pop-ups Integrated! ✨");
+document.addEventListener("DOMContentLoaded", updateProfileDropdown);
