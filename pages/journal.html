@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feelio - My Journal</title>
-    <!-- Mengambil font Poppins dan Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,35 +14,27 @@
 </head>
 <body>
 
-    <div id="loading-screen">
-        <div class="loader-content">
-            <img src="../assets/background/Garden/level_6.png" alt="Loading Mascot" class="loading-mascot">
-            <div class="loading-bar-container">
-                <div class="loading-bar"></div>
-            </div>
-            <p>Gathering your thoughts to reveal your inner glow...</p>
-        </div>
-    </div>
-
     <div id="nav-placeholder"></div>
+    
     <div class="app-wrapper">
         <main class="container">
             
-            <div class="my-garden-floating" id="openGardenBtn">
+            <div class="my-garden-floating reveal" id="openGardenBtn">
                 <span class="badge-count" id="floatingBadgeCount">0</span>
                 <img src="../assets/background/Garden/level_1.png" alt="My Garden" class="garden-pot-img" id="floatingGardenImg">
                 <p>My Garden</p>
             </div>
 
-            <div class="header-section">
+            <div class="header-section reveal">
                 <h1><b>My Journal ✨</b></h1>
                 <p>A safe place for your thoughts and reflections. 💜</p>
             </div>
 
-            <!-- NEW JOURNAL -->
             <div class="dashboard-grid">
+                
                 <div class="left-column">
-                    <div class="card">
+                    
+                    <div class="card reveal">
                         <div class="card-header-action">
                             <div class="card-title"><i class="fa-solid fa-pen-nib"></i> New Journal</div>
                         </div>
@@ -61,9 +52,8 @@
                         <button class="btn-primary" id="saveJournalBtn"><i class="fa-regular fa-bookmark"></i> Save Journal</button>
                     </div>
 
-                    <!-- RECENT JOURNAL -->
-                    <div class="section-title-row">
-                        <i class="fa-solid fa-book-open"></i>
+                    <div class="section-title-row reveal">
+                        <img src="..//assets/images/buku_jurnal.png" alt="Journal Icon" class="custom-title-icon">
                         <div>
                             <h3>Recent Journals</h3>
                             <p>Your recent thoughts and memories.</p>
@@ -71,7 +61,7 @@
                     </div>
 
                     <div class="recent-list" id="recentListContainer">
-                        <div class="recent-item" data-id="1">
+                        <div class="recent-item reveal" data-id="1">
                             <div class="recent-info">
                                 <div class="mood-indicator-img"><img src="../assets/background/Mood/Happy_mood.png" alt="Happy"></div>
                                 <div class="recent-text">
@@ -85,7 +75,7 @@
                             </div>
                         </div>
 
-                        <div class="recent-item" data-id="2">
+                        <div class="recent-item reveal" data-id="2">
                             <div class="recent-info">
                                 <div class="mood-indicator-img"><img src="../assets/background/Mood/Stress.png" alt="Stressed"></div>
                                 <div class="recent-text">
@@ -100,14 +90,14 @@
                         </div>
                     </div>
 
-                    <div class="center-btn-row">
+                    <div class="center-btn-row reveal">
                         <button class="btn-view-all">View All Journals <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                 </div>
 
-                <!-- HOW ARE YOU FEELING -->
                 <div class="right-column">
-                    <div class="card">
+                    
+                    <div class="card reveal">
                         <div class="card-title">How are you feeling?</div>
                         <p class="card-sub">Choose the mood that best fits you.</p>
                         
@@ -143,8 +133,7 @@
                         </div>
                     </div>
 
-                    <!-- EMOTION SKY -->
-                    <div class="card">
+                    <div class="card reveal">
                         <div class="card-title">Emotion Sky</div>
                         <p class="card-sub">The sky changes with your mood.</p>
                         
@@ -154,8 +143,7 @@
                         </div>
                     </div>
 
-                    <!-- LETTER FUTURE SELF -->
-                    <div class="card letter-card">
+                    <div class="card letter-card reveal">
                         <div class="letter-flex">
                             <div class="letter-left">
                                 <div class="card-title">Letter to Future Self</div>
@@ -171,7 +159,6 @@
                         </div>
                     </div>
 
-                    <!-- FUTURE LETTER STEP 1 -->
                     <div class="modal-overlay" id="letterModalStep1">
                         <div class="modal-box">
                             <div class="modal-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -185,7 +172,6 @@
                         </div>
                     </div>
 
-                    <!-- FUTURE LETTER STEP 2 -->
                     <div class="modal-overlay" id="letterModalStep2">
                         <div class="modal-box">
                             <div class="modal-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -208,18 +194,16 @@
         </main>            
     </div>
 
-    <!-- GENERAL MODAL (Untuk Fitur Add Photo, Choose Category, Add Mood, View/Delet) -->
     <div class="modal-overlay" id="generalModal">
         <div class="modal-box">
             <h3 id="generalModalTitle">Title</h3>
             <div class="modal-body" id="generalModalContent"></div>
             <div class="modal-footer">
-                <button class="btn-close-modal" onclick="closeModal('generalModal')">Done</button>
+                <button class="btn-primary" onclick="closeGeneralModal()">Done</button>
             </div>
         </div>
     </div>
 
-    <!-- GARDEN MODAL -->
     <div class="modal-overlay" id="gardenModal">
         <div class="modal-box garden-growth-box">
             <h3>Lavender Garden Growth 🪴</h3>
@@ -234,77 +218,81 @@
         </div>
     </div>
 
-    <!-- CONTEXT MENU POPUP (Tiga Titik) -->    <div class="context-popup" id="actionMenuPopup">        <div class="context-item" id="ctxView"><i class="fa-regular fa-eye"></i> View Journal</div>
+    <div class="context-popup" id="actionMenuPopup">
+        <div class="context-item" id="ctxView"><i class="fa-regular fa-eye"></i> View Journal</div>
         <div class="context-item context-delete" id="ctxDelete"><i class="fa-regular fa-trash-can"></i> Delete Journal</div>
     </div>
+    
     <div id="footer-placeholder"></div>
 
+    <div id="customToast" class="custom-toast">
+        <div class="toast-icon"><i class="fa-solid fa-bell"></i></div>
+        <div class="toast-message" id="toastMessage">Pesan di sini</div>
+    </div>
 
-<script src="https://unpkg.com/feather-icons"></script>
-<script src="../js/journal.js"></script>
+    <!-- VIEW ALL JOURNALS -->
+     <div class="modal-overlay" id="viewAllModalOverlay">
+        <div class="modal-box view-all-modal-box">
+            <div class="view-all-header">
+                <h3><i class="fa-solid fa-book-bookmark"></i> All My Journals</h3>
+                <button class="btn-close-modal" onclick="closeViewAllModal()">Close</button>
+            </div>
+            <div class="view-all-scroll-area" id="viewAllScrollArea"></div>
+        </div>
+    </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
-    try {
+    <!-- Notifikasi konfirmasi penghapusan jurnal -->
+    <div class="modal-overlay" id="deleteConfirmModal" style="z-index: 99999;">
+    <div class="modal-box" style="max-width: 350px; text-align: center; padding: 30px 20px;">
+        <div style="font-size: 45px; color: #FF5C5C; margin-bottom: 15px;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h3 style="font-size: 18px; color: var(--title-dark-purple); margin-bottom: 8px;">Erase Memory?</h3>
+        <p style="font-size: 13px; color: #7E74BA; margin-bottom: 25px;">Erasable journal memory will be lost forever and cannot be recovered.</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button class="btn-outline" onclick="closeDeleteModal()" style="flex: 1; justify-content: center;">Cancel</button>
+            <button class="btn-primary" id="confirmDeleteBtn" style="flex: 1; background: #FF5C5C; box-shadow: 0 4px 15px rgba(255, 92, 92, 0.25);">Yes, Delete</button>
+        </div>
+    </div>
+</div>
 
-        // Load Navbar
-        const navResponse = await fetch("../components/navbar.html");
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="../js/journal.js"></script>
 
-        if (!navResponse.ok) {
-            throw new Error("Navbar tidak ditemukan");
+    <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            // Load Navbar
+            const navResponse = await fetch("../components/navbar.html");
+            if (!navResponse.ok) {
+                throw new Error("Navbar tidak ditemukan");
+            }
+            const navHtml = await navResponse.text();
+            document.getElementById("nav-placeholder").innerHTML = navHtml;
+
+            // Load Footer
+            const footerResponse = await fetch("../components/footer.html");
+            if (!footerResponse.ok) {
+                throw new Error("Footer tidak ditemukan");
+            }
+            const footerHtml = await footerResponse.text();
+            document.getElementById("footer-placeholder").innerHTML = footerHtml;
+
+            // Render Feather Icons
+            if (window.feather) {
+                feather.replace();
+            }
+
+            // Load navbar.js
+            const script = document.createElement("script");
+            script.src = "../js/navbar.js";
+            document.body.appendChild(script);
+
+        } catch (error) {
+            console.error("Gagal memuat komponen:", error);
         }
-
-        const navHtml = await navResponse.text();
-
-        document.getElementById("nav-placeholder").innerHTML = navHtml;
-
-
-        // Load Footer
-        const footerResponse = await fetch("../components/footer.html");
-
-        if (!footerResponse.ok) {
-            throw new Error("Footer tidak ditemukan");
-        }
-
-        const footerHtml = await footerResponse.text();
-
-        document.getElementById("footer-placeholder").innerHTML = footerHtml;
-
-
-        // Render Feather Icons
-        if (window.feather) {
-            feather.replace();
-        }
-
-
-        // Load navbar.js
-        const script = document.createElement("script");
-        script.src = "../js/navbar.js";
-        document.body.appendChild(script);
-
-    } catch (error) {
-
-        console.error("Gagal memuat komponen:", error);
-
-    }
-});
-
-window.addEventListener('load', () => {
-    const loader = document.getElementById('loading-screen');
-    
-    if (loader) {
-        setTimeout(() => {
-            loader.classList.add('fade-out');
-
-            setTimeout(() => {
-                loader.style.display = 'none';
-            }, 800); 
-            
-        }, 1000); 
-    }
-});
-
-</script>
+    });
+    </script>
 
 </body>
 </html>

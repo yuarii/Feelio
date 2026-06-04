@@ -10,6 +10,38 @@ let gardenLevel = 1;
 // --- ARRAY GLOBAL KATEGORI ---
 let availableCategories = ['Work', 'Personal', 'Health', 'Study', 'Travel'];
 
+// ==================== FUNGSI CUSTOM TOAST (NOTIFIKASI) ====================
+function showToast(message, type = 'normal') {
+    const toast = document.getElementById('customToast');
+    const toastMessage = document.getElementById('toastMessage');
+    const toastIcon = document.querySelector('.toast-icon i');
+
+    // 1. Masukkan teks pesan
+    toastMessage.innerText = message;
+
+    // 2. Reset class
+    toast.className = 'custom-toast'; 
+    
+    // 3. Atur warna & ikon berdasarkan tipe
+    if (type === 'success') {
+        toast.classList.add('success');
+        toastIcon.className = 'fa-solid fa-circle-check';
+    } else if (type === 'warning') {
+        toast.classList.add('warning');
+        toastIcon.className = 'fa-solid fa-circle-exclamation';
+    } else {
+        toastIcon.className = 'fa-solid fa-bell';
+    }
+
+    // 4. Munculkan notifikasi
+    toast.classList.add('show');
+
+    // 5. Sembunyikan otomatis setelah 3.5 detik
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3500);
+}
+
 
 // 2.FUNGSI UTAMA & INISIALISASI
 document.addEventListener("DOMContentLoaded", () => {
@@ -73,10 +105,19 @@ if (writeLetterBtn) {
     writeLetterBtn.addEventListener('click', () => {
         futureLetterText.value = '';
         unlockDateInput.value = '';
+        
+        // Menggunakan Waktu Lokal (Local Time) untuk akurasi maksimal
         const today = new Date();
-        today.setDate(today.getDate() + 1);
-        const tomorrowStr = today.toISOString().split('T')[0];
+        today.setDate(today.getDate() + 1); // Tambah 1 hari (Besok)
+        
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const tomorrowStr = `${yyyy}-${mm}-${dd}`;
+        
+        // Kunci kalender agar tanggal sebelumnya dan hari ini tidak bisa diklik
         unlockDateInput.setAttribute('min', tomorrowStr);
+        
         letterModalStep1.classList.add('active');
     });
 }
@@ -91,7 +132,7 @@ function closeModal(modalId) {
 if (nextLetterStepBtn) {
     nextLetterStepBtn.addEventListener('click', () => {
         if (futureLetterText.value.trim() === "") {
-            alert("Please write something to your future self first! 💜");
+            showToast("Please write something to your future self first! 💜", "warning");
             futureLetterText.focus();
             return;
         }
@@ -109,11 +150,11 @@ if (finalizeLetterBtn) {
     finalizeLetterBtn.addEventListener('click', () => {
         const chosenDate = unlockDateInput.value;
         if (!chosenDate) {
-            alert("Please pick a date when you want to open this letter! 📅");
+            showToast("Please pick a date when you want to open this letter! 📅", "warning");
             return;
         }
 
-        const targetDate = new Date(chosenDate).toLocaleDateString('id-ID', {
+        const targetDate = new Date(chosenDate).toLocaleDateString('en-US', {
             year: 'numeric', month: 'long', day: 'numeric'
         });
 
@@ -126,7 +167,7 @@ if (finalizeLetterBtn) {
                             <span style="font-size: 45px; display: block; filter: drop-shadow(0 4px 8px rgba(139,124,230,0.3));">✉️🔒</span>
                         </div>
                         <h4 class="lock-status-title">Your Time Capsule is Sealed ✨</h4>
-                        <p class="card-sub" style="font-size: 13px; color: #7E74BA; margin-bottom: 12px; text-align: center;">The precious letter to your future has been safely stored in a time capsule.</p>
+                        <p class="card-sub" style="font-size: 13px; color: #7E74BA; margin-bottom: 12px; text-align: center;">Your precious letter for the future has been safely stored in the time capsule.</p>
                         <div class="lock-status-countdown">
                             🔒 Unlocks on: <strong>${targetDate}</strong>
                         </div>
@@ -135,7 +176,7 @@ if (finalizeLetterBtn) {
             }
         }
 
-        alert(`🔒 Letter Locked Securely!\n\nYour secret message has been sealed and sent to the time capsule. It will be available to open on ${targetDate}.`);
+        showToast(`🔒 Letter Locked Securely!\n\nYour secret message has been sealed and sent to the time capsule. It will be available to open on ${targetDate}.`, "success");
         letterModalStep2.classList.remove('active');
     });
 }
@@ -181,10 +222,15 @@ function openModal(type) {
     modal.classList.add('active');
     
     if (type === 'photo') {
-        modalTitle.textContent = 'Add Photo';
+        modalTitle.textContent = 'Add Photo ✨';
+        
         modalContent.innerHTML = `
-            <input type="file" id="photoInput" accept="image/*" class="input-control">
-            <p style="font-size: 12px; color: #7E74BA; margin-top:10px;">Choose your memorable photo today.</p>
+            <input type="file" id="photoInput" accept="image/*" style="display: none;">
+            <label for="photoInput" class="upload-area" id="uploadLabel">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span class="upload-title" id="uploadText">Click to browse photo</span>
+                <span class="upload-subtitle">Supports JPG, PNG, JPEG</span>
+            </label>
         `;
         
         const photoInput = document.getElementById('photoInput');
@@ -193,6 +239,12 @@ function openModal(type) {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
+                    
+                    const uploadText = document.getElementById('uploadText');
+                    const uploadIcon = document.querySelector('.upload-area i');
+                    if(uploadText) uploadText.innerText = "Processing...";
+                    if(uploadIcon) uploadIcon.className = "fa-solid fa-spinner fa-spin"; 
+                    
                     reader.onload = function(event) {
                         currentJournalData.photo = event.target.result; 
                         const addPhotoBtn = document.getElementById('addPhotoBtn');
@@ -203,7 +255,10 @@ function openModal(type) {
                             addPhotoBtn.innerHTML = `<i class="fa-solid fa-image"></i> ${fileName}`;
                             addPhotoBtn.style.backgroundColor = '#EAE5F9'; 
                         }
-                        closeGeneralModal(); 
+                        
+                        setTimeout(() => {
+                            closeGeneralModal();
+                        }, 400);
                     };
                     reader.readAsDataURL(file);
                 }
@@ -211,7 +266,7 @@ function openModal(type) {
         }
     } else if (type === 'category') {
         modalTitle.textContent = 'Choose Category';
-        renderCategoryContent(modalContent); // Panggil fungsi render khusus kategori
+        renderCategoryContent(modalContent); 
     }
 }
 
@@ -225,9 +280,10 @@ function renderCategoryContent(container) {
         <hr style="border: 0; border-top: 1px dashed #E2DCF5; margin: 15px 0;">
         
         <p style="font-size: 12px; color: #7E74BA; margin-bottom: 8px; text-align: left; font-weight: 500;">Or create your own:</p>
-        <div style="display: flex; gap: 8px;">
-            <input type="text" id="newCatInput" class="input-control" placeholder="New category name..." style="padding: 8px 12px; font-size: 13px;">
-            <button class="btn-primary" onclick="addNewCategory()" style="padding: 8px 16px; border-radius: 12px; font-size: 13px; width: auto;">Add</button>
+        
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <input type="text" id="newCatInput" class="input-control" placeholder="New category name..." style="flex: 1; height: 42px; margin: 0; padding: 0 14px; font-size: 13px; border-radius: 12px; border: 1px solid #E2DCF5; outline: none; background: #F4F1FC;">
+            <button class="btn-primary" onclick="addNewCategory()" style="height: 42px; margin: 0; padding: 0 20px; border-radius: 12px; font-size: 13px; width: auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(139, 124, 230, 0.2);">Add</button>
         </div>
     `;
 }
@@ -238,20 +294,20 @@ window.addNewCategory = function() {
     const newCat = inputEl.value.trim();
     
     if (newCat === "") {
-        alert("The category name cannot be empty! ✨");
+        showToast("Category name cannot be empty! ✨", "warning");
         inputEl.focus();
         return;
     }
     
     const exists = availableCategories.some(c => c.toLowerCase() === newCat.toLowerCase());
     if (exists) {
-        alert("This category is already on the list! 😉");
+        showToast("This category already exists! 😉", "warning");
         inputEl.value = "";
         return;
     }
     
     availableCategories.push(newCat);
-    selectCategory(newCat); // Otomatis pilih
+    selectCategory(newCat); 
 };
 
 function closeGeneralModal() {
@@ -264,7 +320,7 @@ function selectCategory(cat) {
     const btnCat = document.getElementById('chooseCatBtn');
     if (btnCat) {
         btnCat.innerHTML = `<i class="fa-solid fa-tags"></i> ${cat}`;
-        btnCat.style.backgroundColor = '#EAE5F9'; // Efek visual terpilih
+        btnCat.style.backgroundColor = '#EAE5F9'; 
     }
 }
 
@@ -274,6 +330,7 @@ if(addPhotoBtn) addPhotoBtn.addEventListener('click', () => openModal('photo'));
 const chooseCatBtn = document.getElementById('chooseCatBtn');
 if(chooseCatBtn) chooseCatBtn.addEventListener('click', () => openModal('category'));
 
+
 // ==================== FUNGSI SAVE JOURNAL FINAL & UPDATE GARDEN ==================== //
 const saveBtn = document.getElementById('saveJournalBtn');
 if (saveBtn) {
@@ -282,7 +339,7 @@ if (saveBtn) {
         const bodyInput = document.getElementById('journalBody').value;
 
         if (titleInput.trim() === "" || bodyInput.trim() === "") {
-            alert("Judul dan isi jurnal harus diisi ya! ✨");
+            showToast("Journal title and content must be filled! ✨", "warning");
             return;
         }
 
@@ -307,7 +364,7 @@ if (saveBtn) {
         }
 
         const newJournalItem = document.createElement('div');
-        newJournalItem.className = 'recent-item';
+        newJournalItem.className = 'recent-item reveal';
 
         const now = new Date();
         const dateString = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -317,6 +374,7 @@ if (saveBtn) {
         const safeBodyInput = bodyInput.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         
         const photoHtmlData = currentJournalData.photo ? `<div class="saved-photo-data" style="display: none;">${currentJournalData.photo}</div>` : '';
+        const cat = currentJournalData.category ? currentJournalData.category : 'General';
 
         newJournalItem.innerHTML = `
             <div class="recent-info">
@@ -326,7 +384,13 @@ if (saveBtn) {
                     <p>${previewText}</p>
                     <div class="full-body-text" style="display: none;">${safeBodyInput}</div>
                     ${photoHtmlData}
-                    <span class="date-sub">${dateString} • ${timeString}</span>
+                    
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                        <span class="category-badge"><i class="fa-solid fa-tag"></i> ${cat}</span>
+                        <span class="date-sub">${dateString} • ${timeString}</span>
+                    </div>
+                    
+                    <div class="saved-category-data" style="display: none;">${cat}</div>
                 </div>
             </div>
             <div class="recent-meta">
@@ -335,9 +399,13 @@ if (saveBtn) {
         `;
 
         recentContainer.prepend(newJournalItem);
-        const cat = currentJournalData.category ? currentJournalData.category : 'General';
-        alert(`Jurnal tersimpan dengan kategori: ${cat}`);
+        
+        setTimeout(() => {
+            newJournalItem.classList.add('active');
+        }, 50);
 
+        showToast(`Journal saved successfully under: ${cat} ✨`, "success"); 
+        
         // --- UPDATE LOGIKA MY GARDEN ---
         if (currentJournalData.mood === 'happy' || currentJournalData.mood === null) { 
             happyJournalCount++;
@@ -417,9 +485,12 @@ document.addEventListener('click', function(event) {
                 actionMenuPopup.setAttribute('data-active-id', cardId);
             }
             
+            document.body.appendChild(actionMenuPopup);
+            
             const rect = targetTrigger.getBoundingClientRect();
             actionMenuPopup.style.position = 'absolute';
-            actionMenuPopup.style.zIndex = '9999'; 
+            
+            actionMenuPopup.style.zIndex = '999999'; 
             
             actionMenuPopup.style.top = `${rect.bottom + window.scrollY + 5}px`;
             let leftPos = rect.left + window.scrollX - 110;
@@ -464,12 +535,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const imgEl = activeCard.querySelector('.mood-indicator-img img');
                 const moodImgSrc = imgEl ? imgEl.src : '';
 
+                const savedCatEl = activeCard.querySelector('.saved-category-data');
+                const catText = savedCatEl ? savedCatEl.innerText : 'General';
+
                 const contentHtml = `
                     <div style="text-align: center; margin-bottom: 20px;">
                         <img src="${moodImgSrc}" alt="Mood" style="width: 140px; height: 140px; object-fit: contain; margin-bottom: 12px;">
-                        <p style="font-size: 14px; color: #7E74BA; margin: 0; font-weight: 600;">${dateText}</p>
+                        
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <span style="background: #F4F1FC; color: #8B7CE6; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; border: 1px solid #E2DCF5;"><i class="fa-solid fa-tag"></i> ${catText}</span>
+                            <p style="font-size: 13px; color: #7E74BA; margin: 0; font-weight: 600;">${dateText}</p>
+                        </div>
                     </div>
-                    <div style="background: #F8F7FF; padding: 20px; border-radius: 12px; font-size: 14px; color: #4A4276; line-height: 1.6; text-align: left; max-height: 220px; overflow-y: auto; white-space: pre-wrap;">
+                    <div style="background: #F8F7FF; padding: 20px; border-radius: 12px; font-size: 14px; color: #4A4276; line-height: 1.6; text-align: left; max-height: 220px; overflow-y: auto; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word;">
                         ${bodyContent}
                         ${photoDisplayHtml}
                     </div>
@@ -477,22 +555,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 openGeneralModal(title, contentHtml);
             }
+            
             closeActionMenu(actionMenuPopup);
+
+            if (typeof closeViewAllModal === 'function') {
+                closeViewAllModal();
+            }
         });
     }
+
+    window.itemToDelete = null;
 
     if (ctxDelete) {
         ctxDelete.addEventListener('click', () => {
             const activeId = actionMenuPopup.getAttribute('data-active-id');
             if (!activeId) return;
 
-            const activeCard = document.querySelector(`.recent-item[data-id="${activeId}"]`);
-            if (activeCard) {
-                const confirmDelete = confirm("Erase this memory? Deleted data cannot be recovered.");
-                if (confirmDelete) {
-                    activeCard.remove(); 
-                }
+            window.itemToDelete = document.querySelector(`.recent-item[data-id="${activeId}"]`);
+            
+            if (window.itemToDelete) {
+                const deleteModal = document.getElementById('deleteConfirmModal');
+                if (deleteModal) deleteModal.classList.add('active');
             }
+            
             closeActionMenu(actionMenuPopup);
         });
     }
@@ -506,9 +591,9 @@ function showGardenPopup() {
     
     const imgPath = `../assets/background/Garden/level_${gardenLevel}.png`; 
     
-    let statusText = "Keep collecting happy moments to grow your garden. ☀️";
+    let statusText = "Keep collecting beautiful moments (Happy Mood) to grow your garden. ☀️";
     if (gardenLevel === 10) {
-        statusText = "Your garden is growing to its full potential! Keep shining and be happy! 🌻";
+        statusText = "Your garden has reached its maximum growth! Keep shining and stay happy! 🌻";
     }
 
     const contentHtml = `
@@ -517,8 +602,8 @@ function showGardenPopup() {
             
             <h3 style="color: #5D54A4; margin-bottom: 10px; font-size: 22px;">Level ${gardenLevel}</h3>
             
-            <p style="color: #7E74BA; font-size: 14px; line-height: 1.6;">  
-            You've taken notes <strong>${happyJournalCount}</strong> happy memory!<br>
+            <p style="color: #7E74BA; font-size: 14px; line-height: 1.6;">
+                You have recorded <strong>${happyJournalCount}</strong> happy memories!<br>
                 ${statusText}
             </p>
             
@@ -530,3 +615,113 @@ function showGardenPopup() {
     
     openGeneralModal(title, contentHtml);
 }
+
+
+// ========================================================
+// 8. SCROLL REVEAL ANIMATION (Updated)
+// ========================================================
+function reveal() {
+    var reveals = document.querySelectorAll(".reveal");
+
+    for (var i = 0; i < reveals.length; i++) {
+        var windowHeight = window.innerHeight;
+        var elementTop = reveals[i].getBoundingClientRect().top;
+        var elementVisible = 50; 
+
+        if (elementTop < windowHeight - elementVisible) {
+            reveals[i].classList.add("active");
+        } 
+        else {
+            reveals[i].classList.remove("active");
+        }
+    }
+}
+
+window.addEventListener("scroll", reveal);
+
+
+// ========================================================
+// 9. VIEW ALL JOURNALS SYSTEM (Trik Meminjam Container)
+// ========================================================
+let originalRecentParent = null;
+let originalRecentSibling = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+    const recentContainer = document.getElementById('recentListContainer');
+    if (recentContainer) {
+        recentContainer.classList.add('limit-view');
+        originalRecentParent = recentContainer.parentElement;
+        originalRecentSibling = recentContainer.nextElementSibling;
+    }
+
+    const viewAllBtn = document.querySelector('.btn-view-all');
+    const viewAllModalOverlay = document.getElementById('viewAllModalOverlay');
+    const viewAllScrollArea = document.getElementById('viewAllScrollArea');
+
+    if (viewAllBtn && viewAllModalOverlay && viewAllScrollArea) {
+        viewAllBtn.addEventListener('click', () => {
+            const recentContainer = document.getElementById('recentListContainer');
+            if (!recentContainer) return;
+
+            viewAllScrollArea.appendChild(recentContainer);
+            
+            recentContainer.classList.remove('limit-view');
+            
+            const items = recentContainer.querySelectorAll('.recent-item');
+            items.forEach(item => item.classList.add('active'));
+            
+            viewAllModalOverlay.classList.add('active');
+        });
+    }
+
+    if (viewAllModalOverlay) {
+        viewAllModalOverlay.addEventListener('click', (e) => {
+            if (e.target === viewAllModalOverlay) {
+                closeViewAllModal();
+            }
+        });
+    }
+});
+
+// Fungsi Menutup Modal
+window.closeViewAllModal = function() {
+    const recentContainer = document.getElementById('recentListContainer');
+    const viewAllModalOverlay = document.getElementById('viewAllModalOverlay');
+    
+    if (!recentContainer || !originalRecentParent) return;
+
+    if (originalRecentSibling) {
+        originalRecentParent.insertBefore(recentContainer, originalRecentSibling);
+    } else {
+        originalRecentParent.appendChild(recentContainer);
+    }
+
+    recentContainer.classList.add('limit-view');
+    
+    if (viewAllModalOverlay) {
+        viewAllModalOverlay.classList.remove('active');
+    }
+};
+
+// ========================================================
+// 10. EKSEKUSI DELETE MODAL
+// ========================================================
+window.closeDeleteModal = function() {
+    const deleteModal = document.getElementById('deleteConfirmModal');
+    if (deleteModal) deleteModal.classList.remove('active');
+    window.itemToDelete = null; 
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', () => {
+            if (window.itemToDelete) {
+                window.itemToDelete.remove(); 
+                showToast("Memory deleted successfully 🗑️", "success"); 
+                window.itemToDelete = null;
+            }
+            closeDeleteModal();
+        });
+    }
+});

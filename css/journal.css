@@ -27,69 +27,6 @@ body {
     min-height: 100vh;
 }
 
-#loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
-    opacity: 1;
-    visibility: visible;
-}
-
-#loading-screen.fade-out {
-    opacity: 0;
-    visibility: hidden;
-}
-
-.loader-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;   
-    text-align: center;
-}
-
-.loading-mascot {
-    width: 180px;
-    height: auto;
-    margin-bottom: 20px;
-    animation: bounce 1s infinite alternate;
-}
-
-.loading-bar-container {
-    width: 250px;
-    height: 8px;
-    background: rgba(139, 108, 255, 0.1);
-    border-radius: 10px;
-    margin: 20px 0;
-    overflow: hidden;
-}
-
-.loading-bar {
-    width: 0%;
-    height: 100%;
-    background: #8B6CFF;
-    border-radius: 10px;
-    animation: fillBar 1.5s ease-in-out forwards;
-}
-
-@keyframes bounce {
-    from { transform: translateY(0); }
-    to { transform: translateY(-15px); }
-}
-
-@keyframes fillBar {
-    0% { width: 0%; }
-    100% { width: 100%; }
-}
-
 /* ================= CONTAINER & GRID LEBAR PENUH ================= */
 .container {
     width: 94%;
@@ -186,6 +123,16 @@ body {
     color: var(--title-dark-purple);
     text-shadow: 0 1px 4px rgba(255, 255, 255, 0.6);
 }
+
+/* ================= CUSTOM TITLE ICON ================= */
+.custom-title-icon {
+    width: 100px; /* Kurangi dari 150px agar lebih proporsional dan tidak memakan banyak tempat */
+    height: auto;
+    object-fit: contain;
+    /* vertical-align dan margin-right dihapus karena akan diatur oleh Flexbox di bawah */
+}
+
+
 
 /* ================= WHITE CARDS COMPONENTS ================= */
 .card {
@@ -322,10 +269,17 @@ textarea.input-control {
     flex: 1; 
     min-width: 0;
     transition: transform 0.2s ease;
+    height: 85px; 
 }
 
 .mood-btn:hover {
     transform: translateY(-2px);
+}
+
+.mood-btn:hover .icon-wrap {
+    background: #EAE5F9;
+    border: 2px solid #CABFFD; /* Garis tepi ungu muda pastel */
+    transform: scale(1.05); /* Membesar sedikit */
 }
 
 .mood-btn .icon-wrap {
@@ -336,6 +290,7 @@ textarea.input-control {
     align-items: center;
     background: #F4F1FC;
     border-radius: 16px;
+    border: 2px solid transparent; 
     transition: all 0.3s ease;
 }
 
@@ -348,34 +303,51 @@ textarea.input-control {
 
 /* Efek saat mood dipilih/aktif */
 .mood-btn.active .icon-wrap {
-    background: #EAE5F9;
-    box-shadow: 0 4px 12px rgba(139, 124, 230, 0.2);
+    background: #FFFFFF; 
+    border: 2px solid var(--btn-purple, #8B7CE6); /* Garis tepi ungu tegas */
+    box-shadow: 0 6px 18px rgba(139, 124, 230, 0.45); 
+    transform: translateY(-2px); 
 }
 
 .mood-btn.active .icon-wrap img {
-    transform: scale(1.15); /* Membesar proporsional tanpa gepeng */
+    transform: scale(1.50); /* Ikon membesar lebih signifikan */
 }
 
 .mood-btn span {
     font-size: 12px;
     color: #7E74BA;
-    font-weight: 500;
+    font-weight: 600; /* Kita buat sedikit lebih tebal dari awal agar stabil */
     text-align: center;
     white-space: nowrap;
+    
+    /* Mengunci wadah teks agar tidak melompat */
+    display: block;
+    height: 18px; 
+    line-height: 18px;
+    
+    /* TRIK ANIMASI MULUS */
+    transform: scale(1);
+    transform-origin: top center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Kurva animasi yang lebih elegan */
+    backface-visibility: hidden; /* Mencegah teks terlihat bergerigi saat animasi */
+    -webkit-font-smoothing: antialiased;
 }
 
 .mood-btn.active span {
-    color: var(--title-dark-purple);
-    font-weight: 700;
+    color: var(--btn-purple, #8B7CE6); 
+    
+    /* JANGAN gunakan font-weight di sini. Kita gunakan scale dan shadow! */
+    transform: scale(1.15); /* Teks membesar dengan sangat mulus */
+    text-shadow: 0 0 1px rgba(139, 124, 230, 0.8); /* Memberikan ilusi huruf menjadi lebih tebal */
 }
 
 /* ================= HANYA PERBAIKAN EMOTION SKY ================= */
 .sky-display-container {
     margin-top: 15px;
-    position: relative;     /* Menjadi jangkar tumpukan elemen */
+    position: relative;    /* Menjadi jangkar tumpukan elemen */
     border-radius: 16px;
     overflow: hidden;
-    height: 110px;          /* Mengunci tinggi kotak langit agar tetap kecil dan pas di card */
+    height: 110px;         /* Mengunci tinggi kotak langit agar tetap kecil dan pas di card */
     width: 100%;
     display: flex;
     justify-content: center;
@@ -548,18 +520,33 @@ textarea.input-control {
     align-items: center;
     margin-bottom: 12px;
     box-shadow: 0 4px 12px rgba(90, 76, 168, 0.05);
+    min-width: 0; /* PENTING: Mencegah elemen memanjang merusak layout */
 }
 
 .recent-info {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Ubah ke flex-start agar konten tetap rapi di atas */
     gap: 14px;
+    flex: 1;
+    min-width: 0;
+}
+
+.recent-text {
+    flex: 1;
+    min-width: 0;
 }
 
 .mood-indicator-img img {
     width: 90px; 
     height: 90px;
     object-fit: contain; 
+}
+
+/* Memotong teks yang kepanjangan menjadi titik-titik (...) */
+.recent-text h4, .recent-text p {
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
 }
 
 .recent-text h4 {
@@ -593,14 +580,34 @@ textarea.input-control {
     margin-top: 20px;
 }
 
+/* ================= PERBAIKAN BUTTON VIEW ALL (TEMA UNGU GELAP KACA) ================= */
 .btn-view-all {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    padding: 8px 20px;
-    border-radius: 20px;
+    /* MENGGUNAKAN WARNA UNGU GELAP SEMI-TRANSPARAN (var(--title-dark-purple) versi rgba) */
+    background: rgba(130, 113, 226, 0.6); 
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Border putih tipis agar pop */
+    color: white; /* Teks tetap putih agar kontras tinggi */
+    padding: 12px 28px; /* Ukuran dibuat sedikit lebih besar dan nyaman */
+    border-radius: 25px;
     cursor: pointer;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px); /* Efek kaca diperkuat */
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); /* Bayangan lebih dalam agar 'terangkat' */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3); /* Sedikit bayangan teks agar makin jelas */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Efek saat tombol di-hover */
+.btn-view-all:hover {
+    background: #8B7CE6; /* Berubah menjadi warna ungu cerah utama (var(--btn-purple)) */
+    border-color: rgba(255, 255, 255, 0.5);
+    color: #FFFFFF;
+    transform: translateY(-3px); /* Efek melompat kecil */
+    box-shadow: 0 8px 25px rgba(139, 124, 230, 0.4); /* Bayangan bersinar ungu */
 }
 
 /* Styling untuk kartu jurnal baru agar seragam dengan desain webmu */
@@ -623,7 +630,8 @@ textarea.input-control {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 9999; /* Dinaikkan agar terhindar dari konflik z-index navbar */
+    padding-top: 50px; /* Dorongan visual yang lebih aman */
     opacity: 0;
     pointer-events: none;
     transition: 0.3s ease;
@@ -803,11 +811,10 @@ textarea.input-control {
 
 /* ================= PERBAIKAN OVERFLOW TEKS PADA MODAL ================= */
 #generalModalContent {
-    max-height: 250px; /* Membatasi tinggi maksimal agar tidak memanjang terus ke bawah */
-    overflow-y: auto; /* Memunculkan scroll jika teks terlalu panjang */
-    word-break: break-word; /* Memaksa kata yang terlalu panjang untuk turun ke bawah */
+    /* Menghapus max-height dan overflow-y agar tidak bentrok dengan scroll JS */
+    word-break: break-word; 
     overflow-wrap: break-word;
-    padding-right: 5px; /* Memberikan sedikit ruang agar teks tidak menabrak scrollbar */
+    padding-right: 5px; 
 }
 
 /* (Opsional) Mempercantik tampilan scrollbar agar sesuai tema Feelio */
@@ -821,4 +828,196 @@ textarea.input-control {
 #generalModalContent::-webkit-scrollbar-thumb {
     background: #CABFFD;
     border-radius: 10px;
+}
+
+/* ================= CUSTOM UPLOAD PHOTO AREA ================= */
+.upload-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 35px 20px;
+    background: #F4F1FC;
+    border: 2px dashed #CABFFD;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.upload-area:hover {
+    background: #EAE5F9;
+    border-color: #8B7CE6;
+    transform: translateY(-2px);
+}
+
+.upload-area i {
+    font-size: 40px;
+    color: #8B7CE6;
+    margin-bottom: 12px;
+    transition: transform 0.3s ease;
+}
+
+.upload-area:hover i {
+    transform: scale(1.1);
+}
+
+.upload-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--title-dark-purple);
+}
+
+.upload-subtitle {
+    font-size: 12px;
+    color: #7E74BA;
+    margin-top: 6px;
+}
+
+
+/* ================= CUSTOM TOAST NOTIFICATION ================= */
+.custom-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px); /* Tersembunyi di atas layar */
+    background: #FFFFFF;
+    border-left: 6px solid #8B7CE6; /* Aksen ungu default */
+    box-shadow: 0 10px 30px rgba(90, 76, 168, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 16px 24px;
+    z-index: 999999; /* Pastikan selalu paling depan */
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efek memantul estetik */
+    pointer-events: none;
+    width: max-content;
+    max-width: 90%;
+}
+
+/* Class saat notifikasi muncul */
+.custom-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* Varian Warna: Sukses */
+.custom-toast.success {
+    border-left-color: #4CAF50;
+}
+.custom-toast.success .toast-icon i {
+    color: #4CAF50;
+}
+
+/* Varian Warna: Peringatan/Warning */
+.custom-toast.warning {
+    border-left-color: #FFB020;
+}
+.custom-toast.warning .toast-icon i {
+    color: #FFB020;
+}
+
+.toast-icon i {
+    font-size: 24px;
+    color: #8B7CE6;
+}
+
+.toast-message {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--title-dark-purple);
+}
+
+/* ================= SCROLL REVEAL ANIMATIONS ================= */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px); /* Mulai sedikit lebih rendah */
+    transition: all 0.6s ease-in-out; /* Animasi dibuat lebih mulus */
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0); /* Kembali ke posisi semula */
+}
+
+/* ================= SISTEM VIEW ALL JOURNALS ================= */
+/* 1. Sembunyikan jurnal ke-5 dst SAAT di halaman utama */
+#recentListContainer.limit-view .recent-item:nth-child(n+5) {
+    display: none !important;
+}
+
+/* 2. Desain Popup Modal Khusus View All */
+.view-all-modal-box {
+    background: #FAF8FF; 
+    border: 2px solid #E2DCF5;
+    width: 95%;
+    max-width: 650px; 
+    max-height: 70vh; /* PERBAIKAN: Membatasi tinggi agar tidak nabrak navbar */
+    margin-top: 40px; /* Memberikan jarak aman ekstra dari navbar di atasnya */
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    border-radius: 24px; /* Menambahkan efek membulat agar serasi dengan kartu lain */
+}
+
+.view-all-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px dashed #E2DCF5;
+}
+
+.view-all-header h3 {
+    font-size: 22px;
+    color: var(--title-dark-purple);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.view-all-scroll-area {
+    overflow-y: auto;
+    padding-right: 15px; /* Ruang bernapas untuk scrollbar */
+    flex: 1; /* Mengisi sisa ruang ke bawah */
+    margin-bottom: 10px;
+}
+
+/* Scrollbar khusus area View All agar elegan & rapi */
+.view-all-scroll-area::-webkit-scrollbar { width: 8px; }
+.view-all-scroll-area::-webkit-scrollbar-track { background: #F4F1FC; border-radius: 10px; }
+.view-all-scroll-area::-webkit-scrollbar-thumb { background: #CABFFD; border-radius: 10px; }
+
+/* Memaksa semua list jurnal muncul jika sedang berada di dalam Modal View All */
+#viewAllScrollArea #recentListContainer .recent-item {
+    display: flex !important; 
+}
+
+/* ================= MEMATIKAN ANIMASI DI DALAM POPUP ================= */
+/* Memaksa semua item jurnal untuk langsung muncul tanpa animasi saat berada di dalam Modal View All */
+#viewAllScrollArea .reveal {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: none !important;
+}
+
+/* ================= CATEGORY BADGE DI RECENT JOURNAL ================= */
+.category-badge {
+    font-family: 'Poppins', sans-serif;
+    font-size: 10.5px;
+    background: #F4F1FC;
+    color: var(--btn-purple, #8B7CE6);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid #E2DCF5;
 }

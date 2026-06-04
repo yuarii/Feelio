@@ -189,7 +189,7 @@ body {
     display: flex;
     align-items: flex-start; 
     justify-content: center;
-    padding: 160px 10% 80px; 
+    padding: 150px 10% 80px; 
     background: linear-gradient(180deg, #F8F6FF 0%, #FFFFFF 100%);
     box-sizing: border-box;
     position: relative;
@@ -205,13 +205,13 @@ body {
     max-width: 1250px;
     margin: 0 auto;
     align-items: center;
-    transform: translateY(-40px); 
+    transform: translateY(0); 
 }
 
 .hero-content {
     display: flex;
     flex-direction: column;
-    transform: translateY(-10px);
+    transform: translateY(20px);
 }
 
 .hero-content h1 {
@@ -234,11 +234,11 @@ body {
 .hero-visual {
     display: flex;
     justify-content: flex-end;
-    margin-top: 80px;
+    margin-top: 0;
 }
 
 .hero-main-img {
-    width: 150%;
+    width: 160%;
     max-width: 700px;
     filter: drop-shadow(0 30px 60px rgba(139, 108, 255, 0.18));
     animation: floatMascot 6s ease-in-out infinite;
