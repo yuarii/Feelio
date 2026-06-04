@@ -14,15 +14,15 @@
 <body>
     <div id="nav-placeholder"></div>
 
-<div id="loading-screen">
-    <div class="loader-content">
-        <img src="../assets/images/fortune-cookie-jar.png" alt="Loading Mascot" class="loading-mascot">
-        <div class="loading-bar-container">
-            <div class="loading-bar"></div>
+    <div id="loading-screen">
+        <div class="loader-content">
+            <img src="../assets/images/fortune-cookie-jar.png" alt="Loading Mascot" class="loading-mascot">
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+            <p>Gathering a special message just for you...</p>
         </div>
-        <p>Gathering a special message just for you...</p>
     </div>
-</div>
 
     <main class="daily-wrapper">
         <section class="daily-card">
@@ -50,7 +50,7 @@
 
                 <p class="choose-instruction">Choose a cookie</p>
 
-                <div id="result-section" class="result-section hidden">
+                <div id="result-section" class="result-section hidden reveal">
                     <div class="mascot-quote-box">
                         <div class="mascot-wrapper">
                             <img src="../assets/images/mascot-purple.png" alt="Mascot">
@@ -71,7 +71,7 @@
                     </div>
                 </div>
 
-                <div class="zen-card-promo">
+                <div class="zen-card-promo reveal">
                     <div class="promo-text">
                         <h3>Create your own Zen Card</h3>
                         <p>Turn this quote into a beautiful wallpaper and keep the good vibes with you.</p>
@@ -82,7 +82,7 @@
                     </div>
                 </div>
 
-                <section class="extra-info-container">
+                <section class="extra-info-container reveal">
                     <div class="info-card streak-card">
                         <div class="info-content">
                             <h3>Your Daily Streak</h3>
@@ -113,10 +113,10 @@
                     </div>
                 </section>
 
-                <section class="past-messages">
+                <section class="past-messages reveal">
                     <div class="section-header">
                         <h2>Your Past Messages</h2>
-                        <a href="#" class="view-all">View all</a>
+                        <a href="javascript:void(0)" class="view-all" onclick="openViewAll()">View all</a>
                     </div>
                     
                     <div class="slider-wrapper">
@@ -153,7 +153,7 @@
                     </div>
                 </section>
 
-                <div class="footer-banner-container">
+                <div class="footer-banner-container reveal">
                     <div class="footer-banner-content">
                         <div class="footer-banner-text">
                             <h2>One cookie a day, <br> a little light your way.</h2>
@@ -189,6 +189,20 @@
 
     <div id="footer-placeholder"></div>
 
+    <div id="view-all-popup" class="popup-overlay hidden">
+        <div class="popup-content view-all-content">
+            <div class="popup-header">
+                <h2>Your Journey of Light</h2>
+                <button class="close-view-all" onclick="closeViewAll()">&times;</button>
+            </div>
+            
+            <div class="scroll-area">
+                <div class="all-messages-grid" id="allMessagesGrid">
+                    </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/daily-light.js"></script>
     <script>
         async function initPage() {
@@ -219,12 +233,13 @@
 
                     setTimeout(() => {
                         loader.style.display = 'none';
+                        // Paksa scroll aktif setelah loading
+                        document.body.style.overflowY = 'auto';
                     }, 800); 
                     
                 }, 1000); 
             }
         });
-
     </script>
 </body>
 </html>

@@ -1,3 +1,28 @@
+html {
+    /* Hapus scroll-behavior: smooth jika ada */
+    height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: scroll !important; /* Paksa scrollbar muncul */
+    -webkit-overflow-scrolling: touch; /* Untuk kelancaran di mobile */
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
 #loading-screen {
     position: fixed;
     top: 0;
@@ -98,6 +123,7 @@ body, button, input, select, textarea {
 .daily-content { 
     text-align: center; 
     width: 100%; 
+    gap: 15px !important; 
 }
 
 .badge {
@@ -498,7 +524,6 @@ h1 {
     transform: scale(0.95);
 }
 
-/* Utilitas Sembunyikan */
 .hidden {
     display: none !important;
 }
@@ -510,6 +535,8 @@ h1 {
     flex-direction: column;
     align-items: center;
     animation: fadeIn 0.8s ease-out;
+    margin-bottom: 15px !important;
+    padding-bottom: 0 !important;
 }
 
 .result-section:not(.hidden) {
@@ -586,17 +613,19 @@ h1 {
 .zen-card-promo {
     background: #FFF9E5; 
     border-radius: 40px;
-    padding: 30px 60px;
+    padding: 30px 50px;
     display: flex;
     flex-direction: row; 
     align-items: center;
     max-width: 1050px; 
     width: 100%;
-    margin: 80px auto; 
+    margin: 155px auto; 
     position: relative;
     overflow: visible !important; 
     box-shadow: 0 10px 30px rgba(0,0,0,0.02);
     transform: translateY(-45px); 
+    margin-top: 15px !important;
+    padding-top: 0 !important;
 }
 
 .promo-text {
@@ -606,6 +635,7 @@ h1 {
 }
 
 .promo-text h3 {
+     margin-top: 25px;
     font-size: 25px;
     font-weight: 800;
     color: #333;
@@ -613,7 +643,7 @@ h1 {
 }
 
 .promo-text p {
-    font-size: 14px;
+    font-size: 15px;
     color: #666;
     max-width: 320px;
     line-height: 1.4;
@@ -912,7 +942,6 @@ h1 {
     transform: translateY(-8px);
 }
 
-/* Teks Tanggal */
 .message-card .date {
     text-align: left;
     font-size: 13px;
@@ -1077,7 +1106,7 @@ h1 {
 }
 
 /* Responsif Mobile */
-@media (max-width: 768px) {
+@media (max-width: 76px) {
     .mascot-quote-box, .zen-card-promo {
         flex-direction: column;
         text-align: center;
@@ -1125,4 +1154,66 @@ h1 {
 
 .zen-card-visual img:nth-child(3) {
     animation-delay: 0.4s;
+}
+
+@media (max-width: 768px) {
+    .extra-info-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+.view-all-content {
+    max-width: 900px !important;
+    width: 90% !important;
+    max-height: 80vh;
+    padding: 0 !important;
+    overflow: hidden !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 25px 30px;
+    border-bottom: 1px solid #eee;
+    border-radius: 20px 20px 0 0;
+    position: relative;
+    z-index: 10;
+    margin-bottom: 0;
+}
+
+.close-view-all {
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+}
+
+.scroll-area {
+    padding: 20px 30px 30px 30px;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scroll-area::-webkit-scrollbar {
+    display: none;
+}
+
+.all-messages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.all-messages-grid .message-card {
+    width: 100% !important;
+    margin: 0 !important;
+    min-height: 220px;
 }

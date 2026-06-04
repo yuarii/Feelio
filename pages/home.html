@@ -33,8 +33,8 @@
           <h1>Your gentle space <br>to feel better, <br><span class="purple-text">every day.</span></h1>
           <p>Feelio is help you understand your feelings, build healthy habits, and take gentle care of your mind.</p>
           <div class="hero-buttons">
-            <a href="daily-light.html" class="btn-primary">Check in now</a>
-          <a href="#explore" class="btn-secondary">Explore Feelio</a>
+            <a href="javascript:void(0)" class="btn-primary" id="btn-checkin-popup">Check in now</a>
+            <a href="#features-section" class="btn-secondary">Explore Feelio</a>
           </div>
         </div>
 
@@ -46,7 +46,7 @@
       </div>
     </section>
 
-    <section class="info-grid">
+    <section class="info-grid" id="info-section">
       <div class="info-container reveal">
         <div class="info-header">
           <h2>Understand. Care. <br><span class="purple-text">Grow.</span></h2>
@@ -94,7 +94,7 @@
       </div>
     </section>
 
-<section class="features">
+<section id="features-section" class="features">
   <div class="reveal">
     <div class="features-header">
       <span>Everything you need</span> 
@@ -104,7 +104,7 @@
 
     <div class="feature-grid">
       <a href="home.html" class="feature-card">
-        <img src="../assets/images/feature-mood.png" alt="Mood Journey">
+        <img src="../assets/images/mascot_love.png" alt="Mood Journey">
         <h3>Home</h3>
         <p>Track your moods and see how you've been feeling over time.</p>
         <div class="arrow-icon"><i data-feather="arrow-right"></i></div>
@@ -202,8 +202,8 @@
             <h2>Start your journey with Feelio today</h2>
             <p>Small steps. Gentle progress. <br> A better you.</p>
             <div class="cta-buttons">
-                <a href="home.html" class="btn btn-primary">Get started</a>
-                <a href="#" class="btn btn-secondary">Learn more</a>
+                <a href="#features-section" class="btn-secondary">Explore Feelio</a>
+                <a href="#info-section" class="btn-secondary">Learn more</a>
             </div>
         </div>
         <div class="cta-visual">
@@ -211,8 +211,19 @@
         </div>
     </div>
 </section>
-
   </main>
+
+  <div id="checkin-modal" class="modal-overlay">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <img src="../assets/images/mascot_love.png" alt="Feelio Mascot" class="modal-mascot">
+        <h2>A special space awaits you!</h2>
+        <p>Let's create an account so you can save your daily insights, track your happy moments, and let your inner glow grow every day. ✨</p>
+        <div class="modal-buttons">
+            <button class="btn-primary" id="go-to-auth">Join Feelio & Start Check-in</button>
+        </div>
+    </div>
+</div>
 
 <div id="footer-placeholder"></div>
 
@@ -223,8 +234,7 @@
         if (!response.ok) throw new Error("Gagal load navbar");
         const data = await response.text();
         document.getElementById('nav-placeholder').innerHTML = data;
-        
-        // --- LOAD FOOTER (Tambahkan ini) ---
+       
         const footRes = await fetch('../components/footer.html');
         const footData = await footRes.text();
         document.getElementById('footer-placeholder').innerHTML = footData;

@@ -11,15 +11,26 @@
     <link rel="stylesheet" href="../css/navbar.css">
     <link rel="stylesheet" href="../css/footer.css">
     <link rel="stylesheet" href="../css/journal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
+
+    <div id="loading-screen">
+        <div class="loader-content">
+            <img src="../assets/background/Garden/level_6.png" alt="Loading Mascot" class="loading-mascot">
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+            <p>Gathering your thoughts to reveal your inner glow...</p>
+        </div>
+    </div>
 
     <div id="nav-placeholder"></div>
     <div class="app-wrapper">
         <main class="container">
             
             <div class="my-garden-floating" id="openGardenBtn">
-                <span class="badge-count" id="floatingBadgeCount">2</span>
+                <span class="badge-count" id="floatingBadgeCount">0</span>
                 <img src="../assets/background/Garden/level_1.png" alt="My Garden" class="garden-pot-img" id="floatingGardenImg">
                 <p>My Garden</p>
             </div>
@@ -68,10 +79,9 @@
                                     <p>Today was a good day. I felt more productive and calm...</p>
                                     <span class="date-sub">May 20, 2026 • 10:30 PM</span>
                                 </div>
-                            </div>
+                            </div>                            
                             <div class="recent-meta">
-                                <i class="fa-regular fa-bookmark"></i>
-                                <i class="fa-solid fa-ellipsis-vertical action-trigger" onclick="toggleMenuPopup(event)"></i>
+                                <i class="fa-solid fa-ellipsis-vertical action-trigger"></i>
                             </div>
                         </div>
 
@@ -83,10 +93,9 @@
                                     <p>My mind was so busy today, I just need to breathe and let it go...</p>
                                     <span class="date-sub">May 18, 2026 • 11:45 PM</span>
                                 </div>
-                            </div>
+                            </div>                            
                             <div class="recent-meta">
-                                <i class="fa-regular fa-bookmark"></i>
-                                <i class="fa-solid fa-ellipsis-vertical action-trigger" onclick="toggleMenuPopup(event)"></i>
+                                <i class="fa-solid fa-ellipsis-vertical action-trigger"></i>
                             </div>
                         </div>
                     </div>
@@ -195,31 +204,9 @@
                     </div>
                 </div>
 
-            </div>
-        </main>
+            </div>        
+        </main>            
     </div>
-
-     <!-- POPUP PHOTO DAN CATAGORY -->
-    <!-- <div id="photoModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('photoModal')">&times;</span>
-            <h3>Add a Photo</h3>
-            <input type="file" id="fileInput" accept="image/*">
-            <button class="btn-primary" style="margin-top:10px;">Upload</button>
-        </div>
-    </div>
-
-    <div id="catModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('catModal')">&times;</span>
-            <h3>Choose Category</h3>
-            <div class="category-list">
-                <button class="btn-outline">Mental Health</button>
-                <button class="btn-outline">Personal</button>
-                <button class="btn-outline">Work</button>
-            </div>
-        </div>
-    </div> -->
 
     <!-- GENERAL MODAL (Untuk Fitur Add Photo, Choose Category, Add Mood, View/Delet) -->
     <div class="modal-overlay" id="generalModal">
@@ -247,10 +234,7 @@
         </div>
     </div>
 
-    <!-- CONTEXT MENU POPUP (Tiga Titik) -->
-    <div class="context-popup" id="actionMenuPopup">
-        <div class="context-item" id="ctxView"><i class="fa-regular fa-eye"></i> View Journal</div>
-        <div class="context-item" id="ctxEdit"><i class="fa-regular fa-pen-to-square"></i> Edit Journal</div>
+    <!-- CONTEXT MENU POPUP (Tiga Titik) -->    <div class="context-popup" id="actionMenuPopup">        <div class="context-item" id="ctxView"><i class="fa-regular fa-eye"></i> View Journal</div>
         <div class="context-item context-delete" id="ctxDelete"><i class="fa-regular fa-trash-can"></i> Delete Journal</div>
     </div>
     <div id="footer-placeholder"></div>
@@ -304,6 +288,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 });
+
+window.addEventListener('load', () => {
+    const loader = document.getElementById('loading-screen');
+    
+    if (loader) {
+        setTimeout(() => {
+            loader.classList.add('fade-out');
+
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 800); 
+            
+        }, 1000); 
+    }
+});
+
 </script>
 
 </body>

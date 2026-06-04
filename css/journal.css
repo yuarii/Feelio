@@ -2,7 +2,7 @@
 :root {
     --text-white: #FFFFFF;
     --text-light-purple: #D6C7FA;
-    --title-dark-purple: #3A2C85; /* Ungu gelap pekat asli sesuai mockup */
+    --title-dark-purple: #3A2C85; 
     --card-bg: #FFFFFF;
     --input-bg: rgba(240, 235, 255, 0.6);
     --btn-purple: #8B7CE6;
@@ -16,15 +16,78 @@
 }
 
 body {
-    background-color: #D3C5F5;
-    background-image: url('../assets/background/background.png');
-    background-size: cover;
-    background-position: center 85%; /* Mengunci posisi gunung agar pas di tengah bawah */
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-color: #D3C5F5 !important; 
+    background-image: url('../assets/background/background.png') !important;
+    background-size: cover !important;
+    background-position: center 85% !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
     color: var(--title-dark-purple);
     font-family: 'Plus Jakarta Sans', sans-serif;
     min-height: 100vh;
+}
+
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    opacity: 1;
+    visibility: visible;
+}
+
+#loading-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   
+    text-align: center;
+}
+
+.loading-mascot {
+    width: 180px;
+    height: auto;
+    margin-bottom: 20px;
+    animation: bounce 1s infinite alternate;
+}
+
+.loading-bar-container {
+    width: 250px;
+    height: 8px;
+    background: rgba(139, 108, 255, 0.1);
+    border-radius: 10px;
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+.loading-bar {
+    width: 0%;
+    height: 100%;
+    background: #8B6CFF;
+    border-radius: 10px;
+    animation: fillBar 1.5s ease-in-out forwards;
+}
+
+@keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-15px); }
+}
+
+@keyframes fillBar {
+    0% { width: 0%; }
+    100% { width: 100%; }
 }
 
 /* ================= CONTAINER & GRID LEBAR PENUH ================= */
@@ -239,7 +302,7 @@ textarea.input-control {
     box-shadow: 0 6px 15px rgba(139, 124, 230, 0.25);
 }
 
-/* ================= REVISI HOW ARE YOU FEELING (ANTI KEGENCET) ================= */
+/* ================= REVISI HOW ARE YOU FEELING ================= */
 .mood-options {
     display: flex;
     justify-content: space-between;
@@ -256,7 +319,7 @@ textarea.input-control {
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    flex: 1; /* Membagi ruang tombol secara adil */
+    flex: 1; 
     min-width: 0;
     transition: transform 0.2s ease;
 }
@@ -265,9 +328,8 @@ textarea.input-control {
     transform: translateY(-2px);
 }
 
-/* Kotak pembungkus gambar emot awan */
 .mood-btn .icon-wrap {
-    width: 55px;  /* Ukuran kotak dinaikkan agar lebih kelihatan */
+    width: 55px;  
     height: 55px;
     display: flex;
     justify-content: center;
@@ -277,11 +339,10 @@ textarea.input-control {
     transition: all 0.3s ease;
 }
 
-/* Solusi Mutlak Gambar Kegencet/Gepeng */
 .mood-btn .icon-wrap img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Gambar tetap bulat utuh, anti-distorsi */
+    object-fit: contain; 
     transition: transform 0.3s ease;
 }
 
@@ -496,8 +557,9 @@ textarea.input-control {
 }
 
 .mood-indicator-img img {
-    width: 36px;
-    height: 36px;
+    width: 90px; 
+    height: 90px;
+    object-fit: contain; 
 }
 
 .recent-text h4 {
@@ -675,35 +737,88 @@ textarea.input-control {
     font-size: 20px;
 }
 
-/* TITIK TIGA */
-/* Styling untuk Popup */
-.context-popup {
-    display: none; /* Sembunyi secara default */
+
+/* ================= CONTEXT MENU POPUP (TIGA TITIK) ================= */
+#actionMenuPopup {
+    display: none; /* Sembunyikan secara default */
     position: absolute;
     background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    z-index: 1000;
-    min-width: 150px;
-    padding: 5px 0;
+    color: var(--title-dark-purple);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(90, 76, 168, 0.15); /* Bayangan estetik pastel */
+    z-index: 99999; /* Super penting: Pastikan muncul paling atas */
+    overflow: hidden;
+    width: 160px; /* Lebar popup */
+    border: 1px solid #E2DCF5;
+    /* Transisi agar munculnya halus */
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Class untuk menampilkan popup */
-.context-popup.show {
-    display: block;
+/* Class ini ditambahkan oleh JavaScript (Pelacak Global) untuk memunculkan popup */
+#actionMenuPopup.active {
+    display: block; 
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .context-item {
-    padding: 10px 15px;
+    padding: 12px 16px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
-    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Jarak antara ikon dan teks di dalam menu */
+    transition: background-color 0.2s ease;
 }
 
 .context-item:hover {
-    background: #f4f4f4;
+    background: #F4F1FC; /* Warna hover ungu sangat muda */
 }
 
 .context-delete {
-    color: red;
+    color: #FF5C5C; /* Warna merah peringatan untuk tombol delete */
+}
+
+.context-delete:hover {
+    background: #FFF0F0; /* Latar merah sangat muda saat tombol delete di-hover */
+}
+
+/* Area klik tombol titik tiga diperluas */
+.action-trigger {
+    cursor: pointer;
+    padding: 10px 5px; /* Perluas area klik */
+    font-size: 16px; /* Ukuran ikon titik tiga */
+    color: #7E74BA;
+    transition: color 0.2s ease;
+}
+
+.action-trigger:hover {
+    color: var(--title-dark-purple);
+}
+
+
+/* ================= PERBAIKAN OVERFLOW TEKS PADA MODAL ================= */
+#generalModalContent {
+    max-height: 250px; /* Membatasi tinggi maksimal agar tidak memanjang terus ke bawah */
+    overflow-y: auto; /* Memunculkan scroll jika teks terlalu panjang */
+    word-break: break-word; /* Memaksa kata yang terlalu panjang untuk turun ke bawah */
+    overflow-wrap: break-word;
+    padding-right: 5px; /* Memberikan sedikit ruang agar teks tidak menabrak scrollbar */
+}
+
+/* (Opsional) Mempercantik tampilan scrollbar agar sesuai tema Feelio */
+#generalModalContent::-webkit-scrollbar {
+    width: 6px;
+}
+#generalModalContent::-webkit-scrollbar-track {
+    background: #F4F1FC;
+    border-radius: 10px;
+}
+#generalModalContent::-webkit-scrollbar-thumb {
+    background: #CABFFD;
+    border-radius: 10px;
 }

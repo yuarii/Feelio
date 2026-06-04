@@ -158,3 +158,35 @@ quickButtons.forEach(button => {
 });
 
 renderPlaces();
+
+let careRevealObserver;
+
+function initCareRevealAnimation(){
+  if(careRevealObserver){
+    careRevealObserver.disconnect();
+  }
+
+  careRevealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add("is-visible");
+      }else{
+        entry.target.classList.remove("is-visible");
+      }
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: "-40px 0px -40px 0px"
+  });
+
+  const revealItems = document.querySelectorAll(
+    ".hero, .search-section, .category-section, .care-layout, .alone-card, .quick-card"
+  );
+
+  revealItems.forEach(item => {
+    item.classList.add("scroll-reveal");
+    careRevealObserver.observe(item);
+  });
+}
+
+initCareRevealAnimation();

@@ -42,6 +42,7 @@ const resetButton = document.querySelector('#resetRituals');
 const randomButton = document.querySelector('#addRandomRitual');
 
 let selectedRituals = JSON.parse(localStorage.getItem('feelioRituals')) || rituals.slice(0, 3);
+let revealObserver;
 
 function saveRituals(){
   localStorage.setItem('feelioRituals', JSON.stringify(selectedRituals));
@@ -53,6 +54,7 @@ function isSelected(title){
 
 function renderRitualCards(){
   if(!ritualGrid) return;
+
   ritualGrid.innerHTML = rituals.map(ritual => {
     const added = isSelected(ritual.title);
 
@@ -72,6 +74,7 @@ function renderRitualCards(){
 
 function renderRoutine(){
   if(!routineList) return;
+
   if(selectedRituals.length === 0){
     routineList.innerHTML = '<div class="empty-state">No ritual yet. Add one from Popular Rituals.</div>';
     return;
@@ -124,6 +127,47 @@ function renderAll(){
   renderRoutine();
 }
 
+function scrollToSection(sectionId){
+  const target = document.getElementById(sectionId);
+  if(!target) return;
+
+  const offset = 170;
+  const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+
+  window.scrollTo({
+    top: targetPosition,
+    behavior: 'smooth'
+  });
+}
+
+function initRevealAnimation(){
+  if(revealObserver){
+    revealObserver.disconnect();
+  }
+
+  revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+      }else{
+        entry.target.classList.remove('is-visible');
+      }
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: '-40px 0px -40px 0px'
+  });
+
+  const revealItems = document.querySelectorAll(
+    '.hero, .quick-card, .rituals-section, .routine-section, .motivation-box'
+  );
+
+  revealItems.forEach(item => {
+    item.classList.add('scroll-reveal');
+    revealObserver.observe(item);
+  });
+}
+
 if(ritualGrid){
   ritualGrid.addEventListener('click', event => {
     const button = event.target.closest('.add-ritual');
@@ -152,4 +196,12 @@ if(randomButton){
   randomButton.addEventListener('click', addRandomRitual);
 }
 
+document.addEventListener('click', event => {
+  const scrollButton = event.target.closest('[data-scroll]');
+  if(!scrollButton) return;
+
+  scrollToSection(scrollButton.dataset.scroll);
+});
+
 renderAll();
+initRevealAnimation();

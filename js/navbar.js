@@ -13,6 +13,7 @@ const notifBadge = document.querySelector(".notification-icon .badge");
 const authModal = document.getElementById("authModal");
 const closeModalBtn = document.getElementById("closeModal");
 const modalFormContainer = document.getElementById("modalFormContainer");
+const registerHint = document.getElementById("registerHint");
 
 let tempRegisterData = null;
 
@@ -31,10 +32,12 @@ function updateProfileDropdown() {
             <a href="#" class="dropdown-item logout-action" style="color: #ff6b6b !important;">Logout</a>
         `;
     } else {
-        dropdownMenu.innerHTML = `
-            <a href="#" class="dropdown-item login-trigger">Login</a>
-            <a href="#" class="dropdown-item register-trigger">Register</a>
-        `;
+    dropdownMenu.innerHTML = `
+        <div class="dropdown-header" style="padding: 10px 20px; font-weight: 600; color: #8B6CFF;">Selamat Datang!</div>
+        <hr style="border:none; border-top:1px solid #eee; margin: 0;">
+        <a href="#" class="dropdown-item login-trigger">Login</a>
+        <a href="#" class="dropdown-item register-trigger highlight-register">Register</a>
+    `;
     }
 }
 
@@ -52,7 +55,7 @@ function showCustomAlert(message, isSuccess = true) {
         display: flex;
         align-items: center;
         gap: 10px;
-        z-index: 10000;
+        z-index: 1000000;
         transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         border-left: 5px solid ${isSuccess ? '#8B6CFF' : '#ff6b6b'};
     `;
@@ -125,20 +128,24 @@ if (markReadBtn && notifContent) {
 
 if (profileTrigger && dropdownMenu) {
     profileTrigger.addEventListener("click", (e) => {
-        e.stopPropagation();
-        updateProfileDropdown();
-        if (notifDropdown) notifDropdown.classList.remove("show");
-        const isOpen = dropdownMenu.classList.toggle("show");
-        if (isOpen) {
-            profileTrigger.classList.add("active");
-        } else {
-            setTimeout(() => {
-                if (!dropdownMenu.classList.contains("show")) {
-                    profileTrigger.classList.remove("active");
-                }
-            }, 150);
+    e.stopPropagation();
+    updateProfileDropdown();
+    
+    if (notifDropdown) notifDropdown.classList.remove("show");
+    
+    const isOpen = dropdownMenu.classList.toggle("show");
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (isOpen) {
+        profileTrigger.classList.add("active");
+        if (!currentUser && registerHint) {
+            registerHint.classList.add("show");
         }
-    });
+    } else {
+        profileTrigger.classList.remove("active");
+        if (registerHint) registerHint.classList.remove("show");
+    }
+});
 }
 
 function handleAuthAction(type) {
@@ -160,13 +167,16 @@ function handleAuthAction(type) {
                 return;
             }
 
-            users.push({ name, email, password });
+            const newUser = { name, email, password };
+            users.push(newUser);
             localStorage.setItem('feelio_users', JSON.stringify(users));
             
-            tempRegisterData = { email, password };
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            showCustomAlert("Registration Successful! Welcome ✨");
             
-            showCustomAlert("Registration Successful! ✨");
-            setTimeout(() => openAuthModal('login'), 1000);
+            closeAuthModal();
+            updateProfileDropdown();
+            setTimeout(() => window.location.reload(), 1500);
         } 
         else if (type === 'login') {
             const email = form.querySelector('.auth-email').value;
@@ -180,7 +190,7 @@ function handleAuthAction(type) {
             } else {
                 showCustomAlert(`Welcome back, ${user.name}! ✨`);
                 localStorage.setItem('currentUser', JSON.stringify(user));
-                authModal.classList.remove("show");
+                closeAuthModal();
                 tempRegisterData = null; 
                 updateProfileDropdown();
                 setTimeout(() => window.location.reload(), 1500);
@@ -192,76 +202,114 @@ function handleAuthAction(type) {
 function openAuthModal(type) {
     if (!authModal || !modalFormContainer) return;
 
+    const fillEmail = (tempRegisterData && tempRegisterData.email) ? tempRegisterData.email : "";
+    const fillPass = (tempRegisterData && tempRegisterData.password) ? tempRegisterData.password : "";
+
     let content = "";
     if (type === 'login') {
-        const fillEmail = tempRegisterData ? tempRegisterData.email : "";
-        const fillPass = tempRegisterData ? tempRegisterData.password : "";
-        
         content = `
             <form id="loginForm" autocomplete="off">
-                <h2>Welcome Back!</h2>
-                <input type="email" class="auth-email" placeholder="Email" value="${fillEmail}" required autocomplete="new-password">
-                <input type="password" class="auth-password" placeholder="Password" value="${fillPass}" required autocomplete="new-password">
+                <input type="text" style="display:none">
+                <input type="password" style="display:none">
+                <h2 style="margin-bottom: 20px; color: #8B6CFF;">Welcome Back!</h2>
+                <input type="email" class="auth-email" placeholder="Email" value="${fillEmail}" autocomplete="new-password" required>
+                <div class="password-wrapper">
+                    <input type="password" class="auth-password" placeholder="Password" value="${fillPass}" autocomplete="new-password" required>
+                    <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" class="toggle-password-img" data-locked="true">
+                </div>
                 <button type="submit" class="auth-btn">Sign In</button>
-                <p style="margin-top:15px; font-size:12px; color:#666">Don't have an account? <a href="#" onclick="openAuthModal('register')" style="color:#8B6CFF">Register here</a></p>
+                <p style="margin-top:15px; font-size:12px; color:#666">Don't have an account? <a href="#" class="register-trigger" style="color:#8B6CFF; font-weight:600; text-decoration:none;">Register here</a></p>
             </form>
         `;
-    } else if (type === 'register') {
+    } else {
         content = `
             <form id="registerForm" autocomplete="off">
-                <h2>Create Account</h2>
-                <input type="text" class="auth-name" placeholder="Full Name" required autocomplete="new-password">
-                <input type="email" class="auth-email" placeholder="Email" required autocomplete="new-password">
-                <input type="password" class="auth-password" placeholder="Password" required autocomplete="new-password">
+                <h2 style="margin-bottom: 20px; color: #8B6CFF;">Create Account</h2>
+                <input type="text" class="auth-name" placeholder="Full Name" autocomplete="new-password" required>
+                <input type="email" class="auth-email" placeholder="Email" autocomplete="new-password" required>
+                <div class="password-wrapper">
+                    <input type="password" class="auth-password" placeholder="Password" autocomplete="new-password" required>
+                    <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" class="toggle-password-img" data-locked="true">
+                </div>
                 <button type="submit" class="auth-btn">Register Now</button>
-                <p style="margin-top:15px; font-size:12px; color:#666">Already have an account? <a href="#" onclick="openAuthModal('login')" style="color:#8B6CFF">Login here</a></p>
+                <p style="margin-top:15px; font-size:12px; color:#666">Already have an account? <a href="#" class="login-trigger" style="color:#8B6CFF; font-weight:600; text-decoration:none;">Login here</a></p>
             </form>
         `;
     }
 
     modalFormContainer.innerHTML = content;
+
+    const currentForm = modalFormContainer.querySelector('form');
+    if (currentForm) {
+        if (!tempRegisterData) {
+            currentForm.reset();
+            const inputs = currentForm.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.value = "";
+                input.setAttribute('value', '');
+            });
+        }
+    }
+
     authModal.classList.add("show");
+    document.body.style.overflow = 'hidden';
     handleAuthAction(type);
 
     if (dropdownMenu) dropdownMenu.classList.remove("show");
     if (notifDropdown) notifDropdown.classList.remove("show");
-    setTimeout(() => {
-        if (profileTrigger) profileTrigger.classList.remove("active");
-    }, 150);
+    if (profileTrigger) profileTrigger.classList.remove("active");
+    if (registerHint) registerHint.classList.remove("show");
+}
+
+function closeAuthModal() {
+    if (authModal) {
+        authModal.classList.remove("show");
+        document.body.style.overflow = 'auto';
+    }
 }
 
 document.addEventListener("click", (e) => {
-    if (e.target.closest(".login-trigger") || (e.target.textContent.trim().toLowerCase() === "login" && e.target.closest(".dropdown-item"))) {
+    const loginBtn = e.target.closest(".login-trigger");
+    const registerBtn = e.target.closest(".register-trigger");
+    const logoutBtn = e.target.closest(".logout-action");
+    const toggleImg = e.target.closest(".toggle-password-img");
+
+    if (loginBtn) {
         e.preventDefault();
         openAuthModal('login');
     } 
-    else if (e.target.closest(".register-trigger") || (e.target.textContent.trim().toLowerCase() === "register" && e.target.closest(".dropdown-item"))) {
+    else if (registerBtn) {
         e.preventDefault();
         openAuthModal('register');
     }
-    else if (e.target.closest(".logout-action")) {
+    else if (logoutBtn) {
         e.preventDefault();
-        
         localStorage.removeItem('currentUser');
-        tempRegisterData = null;
-
-        if (modalFormContainer) {
-            modalFormContainer.innerHTML = '';
-        }
-
+        tempRegisterData = null; 
         showCustomAlert("Successfully logged out! See you soon ✨");
         updateProfileDropdown();
-        
         setTimeout(() => {
-            window.location.reload();
+            window.location.href = window.location.pathname;    
         }, 1000);
+    }
+    else if (toggleImg) {
+        const input = toggleImg.parentElement.querySelector('input');
+        const isLocked = toggleImg.getAttribute('data-locked') === 'true';
+
+        if (isLocked) {
+            input.type = "text";
+            toggleImg.src = "https://cdn-icons-png.flaticon.com/512/3064/3064197.png"; 
+            toggleImg.setAttribute('data-locked', 'false');
+        } else {
+            input.type = "password";
+            toggleImg.src = "https://cdn-icons-png.flaticon.com/512/3064/3064155.png"; 
+            toggleImg.setAttribute('data-locked', 'true');
+        }
     }
 });
 
 if (closeModalBtn) {
-    closeModalBtn.addEventListener("click", () => {
-        authModal.classList.remove("show");
-    });
+    closeModalBtn.addEventListener("click", closeAuthModal);
 }
 
 if (hamburger && navLinks) {
@@ -270,26 +318,70 @@ if (hamburger && navLinks) {
     });
 }
 
-window.addEventListener("click", (e) => {
-    if (authModal && e.target === authModal) {
-        authModal.classList.remove("show");
-    }
-    if (dropdownMenu && dropdownMenu.classList.contains("show")) {
-        if (!profileTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
+function closeModal(id) {
+    document.getElementById(id).classList.remove("show");
+    document.body.style.overflow = 'auto';
+}
+
+document.addEventListener("click", (e) => {
+    const target = e.target;
+    
+    if (target.textContent === "My Profile") {
+        e.preventDefault();
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser) {
+            document.getElementById('displayProfileName').innerText = currentUser.name;
+            document.getElementById('displayProfileEmail').innerText = currentUser.email;
+            document.getElementById('profileModal').classList.add("show");
+            document.body.style.overflow = 'hidden';
             dropdownMenu.classList.remove("show");
-            setTimeout(() => { if(profileTrigger) profileTrigger.classList.remove("active"); }, 150);
         }
     }
-    if (notifDropdown && notifDropdown.classList.contains("show")) {
-        if (!notifTrigger.contains(e.target) && !notifDropdown.contains(e.target)) {
-            notifDropdown.classList.remove("show");
-        }
-    }
-    if (navLinks && navLinks.classList.contains("active")) {
-        if (hamburger && !hamburger.contains(e.target) && !navLinks.contains(e.target)) {
-            navLinks.classList.remove("active");
-        }
+
+    if (target.textContent === "Settings") {
+        e.preventDefault();
+        document.getElementById('settingsModal').classList.add("show");
+        document.body.style.overflow = 'hidden';
+        dropdownMenu.classList.remove("show");
     }
 });
+
+window.addEventListener("click", (e) => {
+    if (authModal && e.target === authModal) closeAuthModal();
+    if (e.target.id === 'profileModal') closeModal('profileModal');
+    if (e.target.id === 'settingsModal') closeModal('settingsModal');
+
+    if (dropdownMenu && !profileTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove("show");
+        profileTrigger.classList.remove("active");
+        if (registerHint) registerHint.classList.remove("show");
+    }
+
+    if (notifDropdown && !notifTrigger.contains(e.target) && !notifDropdown.contains(e.target)) {
+        notifDropdown.classList.remove("show");
+        setTimeout(() => {
+            if (!notifDropdown.classList.contains("show")) {
+                notifDropdown.style.display = "none";
+            }
+        }, 300);
+    }
+});
+
+const checkNavbar = setInterval(() => {
+    const navLinks = document.querySelectorAll('.nav-links a');
+    
+    if (navLinks.length > 0) {
+        const currentPath = window.location.pathname.split("/").pop() || "home.html";
+        
+        navLinks.forEach(link => {
+            const linkPath = link.getAttribute('href');
+            if (linkPath === currentPath) {
+                link.classList.add('active');
+            }
+        });
+
+        clearInterval(checkNavbar);
+    }
+}, 100);
 
 document.addEventListener("DOMContentLoaded", updateProfileDropdown);

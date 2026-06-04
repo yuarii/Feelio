@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
             container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
         });
     }
+    
+    reveal();
 });
 
 function lockCookies() {
@@ -102,7 +104,11 @@ function saveQuote() {
     setTimeout(() => {
         resultSection.classList.remove('hidden');
         resultSection.style.display = 'flex';
+        
         if (typeof feather !== 'undefined') { feather.replace(); }
+        
+        resultSection.classList.add('active');
+        
         resultSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 500);
 }
@@ -163,4 +169,58 @@ function getRandomBg() {
         '../assets/images/quote-fortune.png'
     ];
     return bgs[Math.floor(Math.random() * bgs.length)];
+}
+
+const reveal = () => {
+    const reveals = document.querySelectorAll('.reveal');
+    const windowHeight = window.innerHeight;
+
+    reveals.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementBottom = element.getBoundingClientRect().bottom;
+        const elementVisible = 100; // Jarak pemicu muncul
+
+        if (elementTop < windowHeight - elementVisible && elementBottom > 0) {
+            element.classList.add('active');
+        } else {
+            element.classList.remove('active');
+        }
+    });
+};
+
+window.addEventListener('scroll', reveal);
+window.addEventListener('load', reveal);
+
+function openViewAll() {
+    const popup = document.getElementById('view-all-popup');
+    const grid = document.getElementById('allMessagesGrid');
+    const saved = JSON.parse(localStorage.getItem('feelio_saved_quotes')) || [];
+
+    // Ambil template kartu pesan (sama seperti fungsi renderSavedMessages)
+    let content = "";
+    
+    // Gabungkan pesan yang disimpan + pesan default (originalCards)
+    saved.forEach(item => {
+        content += `
+            <div class="message-card" style="background-image: url('${item.bg}');">
+                <span class="date">${item.date}</span>
+                <p>"${item.quote}"</p>
+            </div>
+        `;
+    });
+
+    grid.innerHTML = content; // Masukkan ke dalam grid popup
+    
+    popup.classList.remove('hidden');
+    popup.style.display = 'flex';
+    setTimeout(() => { popup.style.opacity = '1'; }, 10);
+}
+
+function closeViewAll() {
+    const popup = document.getElementById('view-all-popup');
+    popup.style.opacity = '0';
+    setTimeout(() => {
+        popup.classList.add('hidden');
+        popup.style.display = 'none';
+    }, 400);
 }
